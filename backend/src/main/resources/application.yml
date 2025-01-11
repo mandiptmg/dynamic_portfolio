@@ -36,6 +36,7 @@ spring:
 server:
   servlet:
     context-path: /api/v1
+    
 # Spring Security (Optional if needed)
 # security:
 #   user:

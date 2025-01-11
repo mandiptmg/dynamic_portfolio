@@ -37,8 +37,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAnyAuthority("READ_USER", "WRITE_USER")
+                        // .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        // .requestMatchers("/user/**").hasAnyAuthority("READ_USER", "WRITE_USER")
+                        .requestMatchers("/headers/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(customAuthenticationEntryPoint))
@@ -46,8 +47,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-  
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
