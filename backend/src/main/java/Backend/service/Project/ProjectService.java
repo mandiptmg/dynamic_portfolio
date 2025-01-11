@@ -35,7 +35,7 @@ public class ProjectService {
         return projectRepository.findById(id);
     }
 
-    public Project creatProject(MultipartFile image, Project projectDetails) throws IOException {
+    public Project creatProject( Project projectDetails, MultipartFile image) throws IOException {
 
         Optional<Project> existingProject = projectRepository.findByName(projectDetails.getName());
         if (existingProject.isPresent()) {
