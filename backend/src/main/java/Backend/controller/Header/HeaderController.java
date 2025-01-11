@@ -35,7 +35,7 @@ public class HeaderController {
         if (newHeader == null) {
             return buildResponse("error", HttpStatus.BAD_REQUEST, "Header not created", null);
         }
-        return buildResponse("success", HttpStatus.CREATED, "Header created successfully", newHeader);
+        return buildResponse("success", HttpStatus.CREATED, newHeader.getName() + " created successfully", newHeader);
     }
 
     @GetMapping("/{id}")
@@ -50,17 +50,22 @@ public class HeaderController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Header>> updateHeader(@PathVariable("id") Long id,
             @Valid @RequestBody Header header) {
+
+        Optional<Header> headerOptional = headerService.getHeaderById(id);
+        String headerName = headerOptional.isPresent() ? headerOptional.get().getName() : "";
         Header updatedHeader = headerService.updateHeader(id, header);
         if (updatedHeader == null) {
             return buildResponse("error", HttpStatus.BAD_REQUEST, "Header not updated", null);
         }
-        return buildResponse("success", HttpStatus.OK, "Header updated successfully", updatedHeader);
+        return buildResponse("success", HttpStatus.OK, headerName + " updated successfully", updatedHeader);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteHeader(@PathVariable("id") Long id) {
+        Optional<Header> headerOptional = headerService.getHeaderById(id);
+        String headerName = headerOptional.isPresent() ? headerOptional.get().getName() : "";
         headerService.deleteHeader(id);
-        return buildResponse("success", HttpStatus.OK, "Header deleted successfully", null);
+        return buildResponse("success", HttpStatus.OK, headerName + " deleted successfully", null);
     }
 
     // Helper method to create response

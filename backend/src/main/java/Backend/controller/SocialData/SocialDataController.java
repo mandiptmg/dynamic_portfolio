@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import Backend.model.ApiResponse;
+import Backend.model.Skill.Skill;
 import Backend.model.socialData.SocialData;
+import Backend.service.Skill.SkillService;
 import Backend.service.socialData.SocialDataService;
 import jakarta.validation.Valid;
 
@@ -35,7 +37,8 @@ public class SocialDataController {
     @PostMapping("/add-data")
     public ResponseEntity<ApiResponse<SocialData>> addSocialData(@Valid @RequestBody SocialData socialData) {
         SocialData newSocialData = socialDataService.createSocialData(socialData);
-        return buildResponse("success", HttpStatus.CREATED, "Social Data created successfully", newSocialData);
+        return buildResponse("success", HttpStatus.CREATED, newSocialData.getName() + " created successfully",
+                newSocialData);
     }
 
     // Get social data by ID
@@ -52,15 +55,19 @@ public class SocialDataController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<SocialData>> updateSocialData(@PathVariable("id") Long id,
             @Valid @RequestBody SocialData socialData) {
+        Optional<SocialData> social = socialDataService.getSocialDataById(id);
+        String socialName = social.get().getName();
         SocialData updatedSocialData = socialDataService.updateSocialData(id, socialData);
-        return buildResponse("success", HttpStatus.OK, "Social Data updated successfully", updatedSocialData);
+        return buildResponse("success", HttpStatus.OK, socialName + " updated successfully", updatedSocialData);
     }
 
     // Delete social data by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteSocialData(@PathVariable("id") Long id) {
+        Optional<SocialData> social = socialDataService.getSocialDataById(id);
+        String socialName = social.get().getName();
         socialDataService.deleteSocialData(id);
-        return buildResponse("success", HttpStatus.OK, "Social Data deleted successfully", null);
+        return buildResponse("success", HttpStatus.OK, socialName + " deleted successfully", null);
     }
 
     // Helper method to create response

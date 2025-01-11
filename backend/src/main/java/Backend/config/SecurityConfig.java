@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         // .requestMatchers("/user/**").hasAnyAuthority("READ_USER", "WRITE_USER")
-                        .requestMatchers("/social-data/**").permitAll()
+                        .requestMatchers("/skills/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(customAuthenticationEntryPoint))

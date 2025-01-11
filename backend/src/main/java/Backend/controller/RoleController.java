@@ -2,6 +2,7 @@ package Backend.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class RoleController {
         if (newRole == null) {
             return buildResponse("error", HttpStatus.BAD_REQUEST, "Role not created", null);
         }
-        return buildResponse("success", HttpStatus.CREATED, "Role created successfully", newRole);
+        return buildResponse("success", HttpStatus.CREATED, newRole.getName() + " created successfully", newRole);
     }
 
     @GetMapping("/{id}")
@@ -55,19 +56,23 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Role>> updateRole(@PathVariable Long id, @Valid @RequestBody Role role) {
-        Role updatedRole = roleService.updateRole(id, role);
+    public ResponseEntity<ApiResponse<Role>> updateRole(@PathVariable Long id, @Valid @RequestBody Role roleDetail) {
+        Optional<Role> role = roleService.getRoleById(id);
+        String roleName = role.isPresent() ? role.get().getName() : "";
+        Role updatedRole = roleService.updateRole(id, roleDetail);
         if (updatedRole == null) {
-            return buildResponse("error", HttpStatus.BAD_REQUEST, "Role not updated", null);
+            return buildResponse("error", HttpStatus.BAD_REQUEST, roleDetail + "not updated", null);
         } else {
-            return buildResponse("success", HttpStatus.OK, "Role updated successfully", updatedRole);
+            return buildResponse("success", HttpStatus.OK, roleName + " updated successfully", updatedRole);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteRole(@PathVariable Long id) {
+        Optional<Role> role = roleService.getRoleById(id);
+        String roleName = role.isPresent() ? role.get().getName() : "";
         roleService.deleteRole(id);
-        return buildResponse("success", HttpStatus.OK, "Role deleted successfully", null);
+        return buildResponse("success", HttpStatus.OK, roleName + "deleted successfully", null);
 
     }
 
