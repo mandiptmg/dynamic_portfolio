@@ -19,7 +19,7 @@ public class Project {
     private String name;
 
     @NotBlank(message = "Image is required")
-    private String img;
+    private String image;
 
     @NotBlank(message = "Link is required")
     private String link;

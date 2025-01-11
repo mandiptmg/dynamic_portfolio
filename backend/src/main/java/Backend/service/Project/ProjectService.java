@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,12 @@ public class ProjectService {
     @Value("${file-upload.path}")
     private String uploadPath;
 
+    @Value("${server.servlet.context-path}")
+    private String contextPath; // Add this to capture the context path for static files
+
+    @Value("${base-url}")
+    private String baseUrl;
+
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -35,7 +40,7 @@ public class ProjectService {
         return projectRepository.findById(id);
     }
 
-    public Project creatProject( Project projectDetails, MultipartFile image) throws IOException {
+    public Project creatProject(Project projectDetails, MultipartFile image) throws IOException {
 
         Optional<Project> existingProject = projectRepository.findByName(projectDetails.getName());
         if (existingProject.isPresent()) {
@@ -47,7 +52,7 @@ public class ProjectService {
 
         Project newProject = new Project();
         newProject.setName(projectDetails.getName());
-        newProject.setImg(imagePath);
+        newProject.setImage(imagePath);
         newProject.setLink(projectDetails.getLink());
         return projectRepository.save(newProject);
     }
@@ -57,9 +62,9 @@ public class ProjectService {
             try {
                 // Handle image update if a new image is provided
                 if (image != null && !image.isEmpty()) {
-                    deleteImage(existingProject.getImg());
+                    deleteImage(existingProject.getImage());
                     String imagePath = saveImage(image);
-                    existingProject.setImg(imagePath);
+                    existingProject.setImage(imagePath);
                 }
                 // Update project details
                 existingProject.setName(projectDetails.getName());
@@ -75,7 +80,7 @@ public class ProjectService {
     public void deleteProject(Long id) {
         projectRepository.findById(id).ifPresent(project -> {
             // Delete associated image file
-            deleteImage(project.getImg());
+            deleteImage(project.getImage());
             projectRepository.deleteById(id);
         });
     }
@@ -93,14 +98,14 @@ public class ProjectService {
             Files.createDirectories(filePath.getParent());
         }
         Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return "/uploads/images" + fileName;
+        return baseUrl + contextPath + "/uploads/projects/" + fileName;
 
     }
 
     // Helop method to delete an image
     private void deleteImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
-            String fileName = imagePath.replace("/uploads/images", "");
+            String fileName = imagePath.replace(baseUrl + contextPath + "/uploads/projects/", "");
             Path filePath = Paths.get(uploadPath + fileName);
 
             try {

@@ -21,6 +21,12 @@ spring:
   validation:
     enabled: true
 
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:./uploads/projects/ # Match with the file-upload path
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -41,10 +47,9 @@ server:
       max-request-size: 10MB
 
 file-upload:
-  path: uploads/images/ # File Upload Path
-  allowed-extensions: .jpg,.png,.jpeg # Allowed File Extensions
+  path: ./uploads/projects/
 
-
+base-url: http://localhost:8080
 # Spring Security (Optional if needed)
 # security:
 #   user:

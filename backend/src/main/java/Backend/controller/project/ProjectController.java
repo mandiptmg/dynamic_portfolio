@@ -31,7 +31,7 @@ public class ProjectController {
         return buildResponse("success", HttpStatus.OK, "Projects retrieved successfully", Projects);
     }
 
-    @PostMapping("/add-Project")
+    @PostMapping("/add-project")
     public ResponseEntity<ApiResponse<Project>> addProject(@Valid @ModelAttribute ProjectRequestDTO projectRequest) {
         // if (bindingResult.hasErrors()) {
         // // Return validation errors
