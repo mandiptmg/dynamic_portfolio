@@ -35,8 +35,16 @@ spring:
 
 server:
   servlet:
-    context-path: /api/v1
-    
+    context-path: /api/v1 # Base URL
+    multipart: #File Size Limits
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+file-upload:
+  path: uploads/images/ # File Upload Path
+  allowed-extensions: .jpg,.png,.jpeg # Allowed File Extensions
+
+
 # Spring Security (Optional if needed)
 # security:
 #   user:

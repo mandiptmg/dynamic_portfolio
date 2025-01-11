@@ -10,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import Backend.model.ApiResponse;
-import Backend.model.Skill.Skill;
 import Backend.model.socialData.SocialData;
-import Backend.service.Skill.SkillService;
 import Backend.service.socialData.SocialDataService;
 import jakarta.validation.Valid;
 
