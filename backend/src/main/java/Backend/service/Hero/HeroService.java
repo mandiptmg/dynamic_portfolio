@@ -1,22 +1,15 @@
 package Backend.service.Hero;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import Backend.config.FileUploadProperties;
 import Backend.model.Hero.Hero;
 import Backend.repository.Hero.HeroRepository;
+import Backend.service.Image.ImageService;
 
 @Service
 public class HeroService {
@@ -24,16 +17,10 @@ public class HeroService {
     private static final String HERO_CATEGORY = "hero";
 
     @Autowired
-    private FileUploadProperties fileUploadProperties;
-
-    @Autowired
     private HeroRepository heroRepository;
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
-    @Value("${base-url}")
-    private String baseUrl;
+    @Autowired
+    private ImageService imageService;
 
     public List<Hero> getHeroes() {
         return heroRepository.findAll();
@@ -52,7 +39,7 @@ public class HeroService {
     }
 
     private Hero createNewHero(Hero hero, MultipartFile image) throws IOException {
-        String imagePath = saveImage(HERO_CATEGORY, image);
+        String imagePath = imageService.saveImage(HERO_CATEGORY, image);
         hero.setImage(imagePath);
         return heroRepository.save(hero);
     }
@@ -70,8 +57,8 @@ public class HeroService {
                 .orElseThrow(() -> new RuntimeException("Hero not found"));
 
         if (image != null && !image.isEmpty()) {
-            deleteImage(HERO_CATEGORY, existingHero.getImage());
-            String imagePath = saveImage(HERO_CATEGORY, image);
+            imageService.deleteImage(HERO_CATEGORY, existingHero.getImage());
+            String imagePath = imageService.saveImage(HERO_CATEGORY, image);
             existingHero.setImage(imagePath);
         }
 
@@ -82,33 +69,4 @@ public class HeroService {
         return heroRepository.save(existingHero);
     }
 
-    private String saveImage(String category, MultipartFile image) throws IOException {
-        if (image == null || image.isEmpty()) {
-            throw new RuntimeException("Invalid image file");
-        }
-
-        String uploadDir = Optional.ofNullable(fileUploadProperties.getPaths().get(category))
-                .orElseThrow(() -> new RuntimeException("Invalid upload category: " + category));
-
-        String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-        Path filePath = Paths.get(uploadDir, fileName);
-        Files.createDirectories(filePath.getParent());
-        Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        return baseUrl + contextPath + "/uploads/" + category + "/" + fileName;
-    }
-
-    private void deleteImage(String category, String imagePath) {
-        if (imagePath != null && !imagePath.isEmpty()) {
-            String relativePath = imagePath.replace(baseUrl + contextPath + "/uploads/" + category + "/", "");
-            String uploadDir = fileUploadProperties.getPaths().get(category);
-            Path filePath = Paths.get(uploadDir, relativePath);
-
-            try {
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to delete image file: " + relativePath, e);
-            }
-        }
-    }
 }
