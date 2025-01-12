@@ -14,14 +14,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import Backend.config.FileUploadProperties;
 import Backend.model.Project.Project;
 import Backend.repository.Project.ProjectRepository;
 
 @Service
 public class ProjectService {
 
-    @Value("${file-upload.path}")
-    private String uploadPath;
+    private static final String PROJECT_CATEGORY = "project";
+
+    @Autowired
+    private FileUploadProperties fileUploadProperties;
 
     @Value("${server.servlet.context-path}")
     private String contextPath; // Add this to capture the context path for static files
@@ -47,14 +50,9 @@ public class ProjectService {
             throw new RuntimeException(projectDetails.getName() + " already exists");
         }
 
-        // Handle image upload
-        String imagePath = saveImage(image);
-
-        Project newProject = new Project();
-        newProject.setName(projectDetails.getName());
-        newProject.setImage(imagePath);
-        newProject.setLink(projectDetails.getLink());
-        return projectRepository.save(newProject);
+        String imagePath = saveImage(PROJECT_CATEGORY, image);
+        projectDetails.setImage(imagePath);
+        return projectRepository.save(projectDetails);
     }
 
     public Project updateProject(Long id, Project projectDetails, MultipartFile image) throws IOException {
@@ -62,11 +60,11 @@ public class ProjectService {
             try {
                 // Handle image update if a new image is provided
                 if (image != null && !image.isEmpty()) {
-                    deleteImage(existingProject.getImage());
-                    String imagePath = saveImage(image);
+                    deleteImage(PROJECT_CATEGORY, existingProject.getImage());
+                    String imagePath = saveImage(PROJECT_CATEGORY, image);
                     existingProject.setImage(imagePath);
                 }
-                // Update project details
+
                 existingProject.setName(projectDetails.getName());
                 existingProject.setLink(projectDetails.getLink());
                 return projectRepository.save(existingProject);
@@ -80,39 +78,42 @@ public class ProjectService {
     public void deleteProject(Long id) {
         projectRepository.findById(id).ifPresent(project -> {
             // Delete associated image file
-            deleteImage(project.getImage());
+            deleteImage(PROJECT_CATEGORY, project.getImage());
             projectRepository.deleteById(id);
         });
     }
 
     // Help method to save an image
-    private String saveImage(MultipartFile image) throws IOException {
+    public String saveImage(String category, MultipartFile image) throws IOException {
+
         if (image == null || image.isEmpty()) {
             throw new RuntimeException("Invalid image file");
         }
 
+        String uploadDir = Optional.ofNullable(fileUploadProperties.getPaths().get(category))
+                .orElseThrow(() -> new RuntimeException("Invalid upload category: " + category));
+
         String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-        Path filePath = Paths.get(uploadPath + fileName);
-
-        if (!Files.exists(filePath.getParent())) {
-            Files.createDirectories(filePath.getParent());
-        }
+        Path filePath = Paths.get(uploadDir + fileName);
+        Files.createDirectories(filePath.getParent());
         Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return baseUrl + contextPath + "/uploads/projects/" + fileName;
 
+        return baseUrl + contextPath + "/uploads/" + category + "/" + fileName;
     }
 
-    // Helop method to delete an image
-    private void deleteImage(String imagePath) {
+    // Help method to delete an image
+    private void deleteImage(String category, String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
-            String fileName = imagePath.replace(baseUrl + contextPath + "/uploads/projects/", "");
-            Path filePath = Paths.get(uploadPath + fileName);
+            String relativePath = imagePath.replace(baseUrl + contextPath + "/uploads/" + category + "/", "");
+
+            String uploadDir = fileUploadProperties.getPaths().get(category);
+            Path filePath = Paths.get(uploadDir + relativePath);
 
             try {
                 Files.deleteIfExists(filePath);
 
             } catch (IOException e) {
-                throw new RuntimeException("Failed to delete image file:" + fileName, e);
+                throw new RuntimeException("Failed to delete image file:" + relativePath, e);
             }
         }
     }

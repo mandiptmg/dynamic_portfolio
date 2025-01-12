@@ -26,8 +26,10 @@ spring:
   web:
     resources:
       static-locations:
-        - classpath:/static/
-        - file:${file-upload.path} # Use the configured path
+        - classpath:/static/  / # Default location for app static resources
+        - file:${file-upload.paths.project}
+        - file:${file-upload.paths.hero}
+        - file:${file-upload.paths.about}
 
   mail:
     host: smtp.gmail.com
@@ -49,7 +51,11 @@ server:
       max-request-size: 10MB
 
 file-upload:
-  path: ./uploads/projects/
+  paths:
+    project: ./uploads/project/
+    hero: ./uploads/hero/
+    about: ./uploads/about/
+
 
 base-url: http://localhost:8080
 # Spring Security (Optional if needed)
