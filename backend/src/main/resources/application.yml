@@ -30,6 +30,8 @@ spring:
         - file:${file-upload.paths.project}
         - file:${file-upload.paths.hero}
         - file:${file-upload.paths.about}
+        - file:${file-upload.paths.logo}
+        - file:${file-upload.paths.cover}
 
   mail:
     host: smtp.gmail.com
@@ -47,14 +49,16 @@ server:
   servlet:
     context-path: /api/v1
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 file-upload:
   paths:
     project: ./uploads/project/
     hero: ./uploads/hero/
     about: ./uploads/about/
+    logo: ./uploads/logo/
+    cover: ./uploads/cover/
 
 
 base-url: http://localhost:8080
