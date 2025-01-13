@@ -32,6 +32,7 @@ spring:
         - file:${file-upload.paths.about}
         - file:${file-upload.paths.logo}
         - file:${file-upload.paths.cover}
+        - file:${file-upload.paths.resume}
 
   mail:
     host: smtp.gmail.com
@@ -59,6 +60,7 @@ file-upload:
     about: ./uploads/about/
     logo: ./uploads/logo/
     cover: ./uploads/cover/
+    resume: ./uploads/resume/
 
 
 base-url: http://localhost:8080
