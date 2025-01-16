@@ -11,7 +11,9 @@ import Sidebar from "./components/DashboadLayout/Bar/Sidebar";
 import Navbar from "./components/DashboadLayout/Bar/Navbar";
 import { useGlobalContext } from "./context/Context";
 import Dashboard from "./components/DashboadLayout/Dashboard/Dashboard";
-import HeroSection from "./components/DashboadLayout/HeroSection/HeroSection";
+import HeroSection from "./components/DashboadLayout/Section/HeroSection";
+import AboutSection from "./components/DashboadLayout/Section/AboutSection";
+import SkillTable from "./components/DashboadLayout/Table/SkillTable";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
@@ -78,6 +80,10 @@ function App() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="hero" element ={<HeroSection/>} />
+            <Route path="about" element ={<AboutSection/>} />
+            <Route path="skill" element ={<SkillTable/>} />
+
+
             {/* <Route path="users" element={<UserTable />} /> */}
             {/* <Route path="roles" element={<RoleTable />} /> */}
           </Route>

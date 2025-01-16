@@ -1,15 +1,15 @@
 import {
   FaHome,
-  FaGift,
-  FaStore,
-  FaWallet,
-  FaExchangeAlt,
   FaUser,
   FaSignOutAlt,
   FaUsers,
   FaUserShield,
   FaChevronDown,
   FaChevronRight,
+  FaBriefcase,
+  FaStar,
+  FaPager,
+  FaPalette,
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 // import { useGlobalContext } from "../../context/Context";
@@ -19,10 +19,10 @@ import { useState } from "react";
 // Define menu items
 const menuItems = [
   { icon: <FaHome />, label: "Dashboard", path: "" },
-  { icon: <FaGift />, label: "Hero", path: "/hero" },
-  { icon: <FaStore />, label: "Branches", path: "/branches" },
-  { icon: <FaWallet />, label: "Wallet", path: "/wallet" },
-  { icon: <FaExchangeAlt />, label: "Transactions", path: "/transactions" },
+  { icon: <FaStar />, label: "Hero", path: "/hero" },
+  { icon: <FaPager />, label: "About", path: "/about" },
+  {icon: <FaPalette/>, label:"Skills", path:"/skill"},
+  { icon: <FaBriefcase />, label: "portfolio", path: "/portfolio" },
   { icon: <FaUser />, label: "Account", path: "/account" },
   {
     icon: <FaUserShield />,

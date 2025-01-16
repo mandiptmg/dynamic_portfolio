@@ -99,7 +99,7 @@ const HeroSection = () => {
       const { code, message } = response.data;
 
       if ([200, 201].includes(code)) {
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1000);
         toast.success(message || "Hero created/updated successfully");
         setErrors({});
       }

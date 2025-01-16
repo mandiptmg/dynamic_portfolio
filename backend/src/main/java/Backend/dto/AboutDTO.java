@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import Backend.validation.ConditionalNotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -26,10 +27,10 @@ public class AboutDTO {
     @NotNull(message = "Skill Ids are required")
     private List<Long> skillIds;
 
-    @NotNull(message = "First Image is required")
+    @ConditionalNotNull(message = "First Image file is required.", conditionField = "id")
     private MultipartFile firstImage;
 
-    @NotNull(message = "Second Image is required")
+    @ConditionalNotNull(message = "Second Image file is required.", conditionField = "id")
     private MultipartFile secondImage;
 
     @NotBlank(message = "Project Inquiry is required")

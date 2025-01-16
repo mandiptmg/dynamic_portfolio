@@ -14,27 +14,34 @@ export const AppProvider = ({ children }) => {
   const [error, setError] = useState("");
   const [heroData, setHeroData] = useState(null);
   // const [aboutData, setAboutData] = useState(null);
+  const [skillData, setSkillData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [heroResponse] = await Promise.all([axiosInstance.get("/hero")]);
-
-        const { data: hero, code: heroCode } = heroResponse.data;
-
-        if (heroCode === 200) {
-          setHeroData(hero); // This updates heroData
-        }
+        const [heroResponse, skillResponse] = await Promise.all([
+          axiosInstance.get("/hero"),
+          axiosInstance.get("/skills"),
+        ]);
+  
+        const { data: hero } = heroResponse.data;
+        const { data: skill } = skillResponse.data;
+  
+        setHeroData(hero);
+        setSkillData(skill);
+  
       } catch (error) {
-        setError(error?.response?.data?.message || "An error occurred");
+        const errorMessage = error?.response?.data?.message || "An error occurred";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
   
   useEffect(() => {
     AOS.init({
@@ -94,6 +101,7 @@ export const AppProvider = ({ children }) => {
         setScroll,
         loading,
         heroData,
+        skillData,
         error,
       }}
     >
