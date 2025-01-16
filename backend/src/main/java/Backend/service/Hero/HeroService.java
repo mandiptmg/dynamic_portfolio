@@ -1,7 +1,6 @@
 package Backend.service.Hero;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,46 +21,41 @@ public class HeroService {
     @Autowired
     private ImageService imageService;
 
-    public List<Hero> getHeroes() {
-        return heroRepository.findAll();
+    public Hero getHero() {
+        return heroRepository.findById(1L).orElse(null);
     }
 
-    public Hero saveOrUpdateHero(Hero hero, MultipartFile image) {
+    public Hero saveOrUpdateHero(Hero hero, MultipartFile image, MultipartFile bgImage) {
         try {
             if (hero.getId() == null) {
-                return createNewHero(hero, image);
-            } else {
-                return updateExistingHero(hero, image);
+                return createNewHero(hero, image, bgImage);
             }
+            return updateExistingHero(hero, image, bgImage);
         } catch (IOException e) {
-            throw new RuntimeException("Error saving or updating Hero: " + e.getMessage(), e);
+            throw new RuntimeException("Error saving or updating Hero", e);
         }
     }
 
-    private Hero createNewHero(Hero hero, MultipartFile image) throws IOException {
-        String imagePath = imageService.saveImage(HERO_CATEGORY, image);
-        hero.setImage(imagePath);
+    private Hero createNewHero(Hero hero, MultipartFile image, MultipartFile bgImage) throws IOException {
+        hero.setImage(processImage(image));
+        hero.setBgImage(processImage(bgImage));
         return heroRepository.save(hero);
     }
 
-    private Hero updateExistingHero(Hero hero, MultipartFile image) throws IOException {
-        Hero firstHero = heroRepository.findAll().stream()
+    private Hero updateExistingHero(Hero hero, MultipartFile image, MultipartFile bgImage) throws IOException {
+        Hero existingHero = heroRepository.findAll().stream()
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No heroe found in the database"));
+                .orElseThrow(() -> new RuntimeException("No hero found in the database"));
 
-        if (!hero.getId().equals(firstHero.getId())) {
+        if (!hero.getId().equals(existingHero.getId())) {
             throw new RuntimeException("Only the first Hero can be updated");
         }
 
-        Hero existingHero = heroRepository.findById(hero.getId())
-                .orElseThrow(() -> new RuntimeException("Hero not found"));
+        // Update images if provided
+        updateImage(existingHero, image, true);
+        updateImage(existingHero, bgImage, false);
 
-        if (image != null && !image.isEmpty()) {
-            imageService.deleteImage(HERO_CATEGORY, existingHero.getImage());
-            String imagePath = imageService.saveImage(HERO_CATEGORY, image);
-            existingHero.setImage(imagePath);
-        }
-
+        // Update other properties
         existingHero.setName(hero.getName());
         existingHero.setPosition(hero.getPosition());
         existingHero.setDescription(hero.getDescription());
@@ -69,4 +63,22 @@ public class HeroService {
         return heroRepository.save(existingHero);
     }
 
+    private String processImage(MultipartFile image) throws IOException {
+        return (image != null && !image.isEmpty()) ? imageService.saveImage(HERO_CATEGORY, image) : null;
+    }
+
+    private void updateImage(Hero hero, MultipartFile image, boolean isPrimary) throws IOException {
+        if (image != null && !image.isEmpty()) {
+            String oldImagePath = isPrimary ? hero.getImage() : hero.getBgImage();
+            if (oldImagePath != null) {
+                imageService.deleteImage(HERO_CATEGORY, oldImagePath);
+            }
+            String newImagePath = imageService.saveImage(HERO_CATEGORY, image);
+            if (isPrimary) {
+                hero.setImage(newImagePath);
+            } else {
+                hero.setBgImage(newImagePath);
+            }
+        }
+    }
 }

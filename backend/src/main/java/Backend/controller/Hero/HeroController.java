@@ -1,7 +1,6 @@
 package Backend.controller.Hero;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,21 +21,18 @@ public class HeroController {
 
     // Get all heroes
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Hero>>> getAllHeroes() {
-        List<Hero> heroes = heroService.getHeroes();
-        if (heroes.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No heroes found", heroes);
+    public ResponseEntity<ApiResponse<Hero>> getAllHero() {
+        Hero hero = heroService.getHero();
+        if (hero == null) {
+            return buildResponse("error", HttpStatus.NOT_FOUND, "No hero details found", null);
         }
-        return buildResponse("success", HttpStatus.OK, "Heroes retrieved successfully", heroes);
+        return buildResponse("success", HttpStatus.OK, "Hero Details retrieved successfully", hero);
     }
 
     // Save or update hero
     @PostMapping("/save")
-    public ResponseEntity<ApiResponse<Hero>> saveOrUpdateHero(@ModelAttribute @Valid HeroDto heroDto) {
-        if (!heroDto.isImageValid()) {
-            return buildResponse("error", HttpStatus.BAD_REQUEST, "Image is required and cannot be empty", null);
-        }
 
+    public ResponseEntity<ApiResponse<Hero>> saveOrUpdateHero(@ModelAttribute @Valid HeroDto heroDto) {
         Hero hero = new Hero();
         hero.setId(heroDto.getId());
         hero.setName(heroDto.getName());
@@ -44,8 +40,8 @@ public class HeroController {
         hero.setDescription(heroDto.getDescription());
 
         return buildResponse("success", HttpStatus.OK,
-                "Hero" + (hero.getId() != null ? " update " : " save ") + "successfully",
-                heroService.saveOrUpdateHero(hero, heroDto.getImage()));
+                "Hero Details" + (hero.getId() != null ? " update " : " save ") + "successfully",
+                heroService.saveOrUpdateHero(hero, heroDto.getImage(), heroDto.getBgImage()));
     }
 
     // Helper method to create response

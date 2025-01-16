@@ -2,8 +2,8 @@ package Backend.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import Backend.validation.ConditionalNotNull;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -19,10 +19,16 @@ public class HeroDto {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @NotNull(message = "Image file is required.")
+     @ConditionalNotNull(
+        message = "Image file is required.",
+        conditionField = "id"
+    )
     private MultipartFile image;
 
-    public boolean isImageValid() {
-        return image != null && !image.isEmpty();
-    }
+    @ConditionalNotNull(
+        message = "Background image file is required.",
+        conditionField = "id"
+    )
+    private MultipartFile bgImage;
+
 }
