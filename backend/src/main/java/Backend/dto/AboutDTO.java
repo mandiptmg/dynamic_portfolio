@@ -18,14 +18,14 @@ public class AboutDTO {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @NotNull(message = "Resume is required")
+    @ConditionalNotNull(message = "Resume file is required.", conditionField = "id")
     private MultipartFile resume;
 
-    @NotBlank(message = "Sub Skill Title is required")
+    @NotBlank(message = "Skill Title is required")
     private String subSkillTitle;
 
-    @NotNull(message = "Skill Ids are required")
-    private List<Long> skillIds;
+    @NotNull(message = "Skills are required")
+    private List<Long> skills;
 
     @ConditionalNotNull(message = "First Image file is required.", conditionField = "id")
     private MultipartFile firstImage;

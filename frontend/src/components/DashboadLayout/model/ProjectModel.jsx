@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../../../Api/Axios";
 import { useState } from "react";
 
-export default function SkillModel({
+export default function ProjectModel({
   formData,
   setFormData,
   editId,
@@ -23,37 +23,58 @@ export default function SkillModel({
     isClose();
     setFormData({
       name: "",
-      icon: "",
-      description: "",
+      link: "",
+      image: null,
+      imagePreview: null,
     });
   };
 
   // Handle Input Change
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => {
-      return { ...prev, [name]: value };
-    });
+    const { name, value, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+      imagePreview: files ? URL.createObjectURL(files[0]) : prev.imagePreview,
+    }));
   };
-
   // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const formPayload = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "image") {
+          if (value instanceof File) {
+            formPayload.append(key, value);
+          }
+        } else if (value) {
+          formPayload.append(key, value);
+        }
+      });
+
       let response;
       if (editId) {
-        // Update skill
-        response = await axiosInstance.put(`/skills/${editId}`, formData);
+        // Update project
+        response = await axiosInstance.put(`/projects/${editId}`, formPayload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       } else {
-        // Add new skill
-        response = await axiosInstance.post("/skills/add-skill", formData);
+        // Add new project
+        response = await axiosInstance.post(
+          "/projects/add-project",
+          formPayload,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
       }
 
       const { code, message } = response.data;
       if (code === 201 || code === 200) {
-        toast.success(message || "Skill successfully added/updated!");
+        toast.success(message || "Project successfully added/updated!");
         handleClose();
         setTimeout(() => window.location.reload(), 1000);
       } else {
@@ -90,8 +111,8 @@ export default function SkillModel({
                   className="text-base font-semibold text-gray-900"
                 >
                   {editId
-                    ? "Update Skill Information"
-                    : "Add Skill Information"}
+                    ? "Update Project Information"
+                    : "Add Project Information"}
                 </DialogTitle>
                 <form onSubmit={handleSubmit} className="mt-4 px-3 space-y-4">
                   {/* Name Field */}
@@ -104,7 +125,7 @@ export default function SkillModel({
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="Enter Skill Name"
+                      placeholder="Enter Project Name"
                       className="mt-1 block w-full rounded-lg border border-gray-300 py-1.5 px-3 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     />
                     {errors.name && (
@@ -115,39 +136,45 @@ export default function SkillModel({
                   {/* Icon Field */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Icon
+                      Link URL
                     </label>
                     <input
-                      type="text"
-                      name="icon"
-                      value={formData.icon}
+                      type="url"
+                      name="link"
+                      value={formData.link}
                       onChange={handleInputChange}
-                      placeholder="Enter icon "
+                      placeholder="Enter link URL "
                       className="mt-1 block w-full rounded-lg border border-gray-300 py-1.5 px-3 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     />
-                    {errors.icon && (
-                      <p className="text-red-600 text-xs">{errors.icon}</p>
+                    {errors.link && (
+                      <p className="text-red-600 text-xs">{errors.link}</p>
                     )}
                   </div>
 
-                  {/* Description Field */}
+                  {/* Image Field */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Description
+                      Image
                     </label>
-                    <textarea
-                      name="description"
-                      value={formData.description}
+                    <input
+                      type="file"
+                      name="image"
                       onChange={handleInputChange}
-                      placeholder="Describe the skill..."
                       className="mt-1 block w-full rounded-lg border border-gray-300 py-1.5 px-3 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     />
-                    {errors.description && (
-                      <div className="text-red-500 text-sm mt-1">
-                        {errors.description}
-                      </div>
+                    {errors.image && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.image}
+                      </p>
                     )}
                   </div>
+                  {(formData.imagePreview || formData.image) && (
+                    <img
+                      src={formData.imagePreview || formData.image}
+                      alt="Preview"
+                      className="mt-3 w-full max-h-48 object-contain rounded-md"
+                    />
+                  )}
 
                   {/* Action Buttons */}
                   <div className="text-right space-x-2">
@@ -159,8 +186,8 @@ export default function SkillModel({
                       {loading
                         ? "Loading..."
                         : editId
-                        ? "Update Skill"
-                        : "Create Skill"}
+                        ? "Update Project"
+                        : "Create Project"}
                     </button>
                     <button
                       onClick={handleClose}

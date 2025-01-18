@@ -41,27 +41,27 @@ public class AboutService {
 
         // Handle resume upload
         if (aboutDTO.getResume() != null && !aboutDTO.getResume().isEmpty()) {
-            imageService.deleteImage(RESUME_CATEGORY, existingAbout.getResumePath());
+            imageService.deleteImage(RESUME_CATEGORY, existingAbout.getResume());
             String resumePath = imageService.saveImage(RESUME_CATEGORY, aboutDTO.getResume());
-            existingAbout.setResumePath(resumePath);
+            existingAbout.setResume(resumePath);
         }
 
         // Handle image uploads
         if (aboutDTO.getFirstImage() != null && !aboutDTO.getResume().isEmpty()) {
-            imageService.deleteImage(ABOUT_CATEGORY, existingAbout.getFirstImagePath());
+            imageService.deleteImage(ABOUT_CATEGORY, existingAbout.getFirstImage());
             String firstImagePath = imageService.saveImage(ABOUT_CATEGORY, aboutDTO.getFirstImage());
-            existingAbout.setFirstImagePath(firstImagePath);
+            existingAbout.setFirstImage(firstImagePath);
         }
 
         if (aboutDTO.getSecondImage() != null && !aboutDTO.getResume().isEmpty()) {
-            imageService.deleteImage(ABOUT_CATEGORY, existingAbout.getSecondImagePath());
+            imageService.deleteImage(ABOUT_CATEGORY, existingAbout.getSecondImage());
             String secondImagePath = imageService.saveImage(ABOUT_CATEGORY, aboutDTO.getSecondImage());
-            existingAbout.setSecondImagePath(secondImagePath);
+            existingAbout.setSecondImage(secondImagePath);
         }
 
         // Set skills
-        if (aboutDTO.getSkillIds() != null && !aboutDTO.getResume().isEmpty()) {
-            existingAbout.setSkills(skillRepository.findAllById(aboutDTO.getSkillIds()));
+        if (aboutDTO.getSkills() != null && !aboutDTO.getResume().isEmpty()) {
+            existingAbout.setSkills(skillRepository.findAllById(aboutDTO.getSkills()));
         }
 
         return aboutRepository.save(existingAbout);

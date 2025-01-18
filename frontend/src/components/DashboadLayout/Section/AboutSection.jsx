@@ -6,23 +6,24 @@ import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import { axiosInstance } from "../../../Api/Axios";
 import { useGlobalContext } from "../../../context/Context";
+import { CMultiSelect } from "@coreui/react-pro";
 
 const AboutSection = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const { aboutData } = useGlobalContext();
+  const { aboutData, skillData } = useGlobalContext();
 
-  // Destructure formData state for easy access
   const [formData, setFormData] = useState({
     id: aboutData?.id || null,
     title: aboutData?.title || "",
     description: aboutData?.description || "",
-    image: aboutData?.image || null,
     resume: aboutData?.resume || null,
-    subSkillTitle: aboutData?.subSkillTitle || "",
+    firstImage: aboutData?.firstImage || null,
     secondImage: aboutData?.secondImage || null,
+    subSkillTitle: aboutData?.subSkillTitle || "",
     projectInquiry: aboutData?.projectInquiry || "",
     inquiryDescription: aboutData?.inquiryDescription || "",
+    skills: aboutData?.skills?.map((skill) => skill.id) || [],
     imageURL: null,
     secondImageURL: null,
   });
@@ -32,6 +33,7 @@ const AboutSection = () => {
       setFormData((prev) => ({
         ...prev,
         ...aboutData,
+        skills: aboutData.skills?.map((skill) => skill.id) || [],
       }));
     }
   }, [aboutData]);
@@ -80,10 +82,17 @@ const AboutSection = () => {
     setLoading(true);
 
     const formPayload = new FormData();
+
     Object.entries(formData).forEach(([key, value]) => {
-      if (value instanceof File) {
-        formPayload.append(key, value);
-      } else if (value) {
+      if (["firstImage", "secondImage", "resume"].includes(key)) {
+        // Handle File objects
+        if (value instanceof File) {
+          formPayload.append(key, value);
+        }
+      } else if (Array.isArray(value)) {
+        // Handle arrays
+        value.forEach((item) => formPayload.append(`${key}[]`, item));
+      } else if (value != null) {
         formPayload.append(key, value);
       }
     });
@@ -97,7 +106,7 @@ const AboutSection = () => {
       const { code, message } = response.data;
 
       if ([200, 201].includes(code)) {
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1000);
         toast.success(message || "About created/updated successfully");
         setErrors({});
       }
@@ -112,37 +121,27 @@ const AboutSection = () => {
     }
   };
 
+  // Transform skills data for the multi-select component
+  const skillOptions = skillData.map((skill) => ({
+    value: skill.id,
+    label: skill.name,
+  }));
+
+  // Transform selected skills for the multi-select value
+  const selectedSkillOptions = skillOptions.filter((option) =>
+    formData.skills.includes(option.value)
+  );
+
+  // Handle skills selection change
+  const handleSkillsChange = (selected) => {
+    setFormData((prev) => ({
+      ...prev,
+      skills: selected.map((option) => option.value),
+    }));
+  };
+
   const renderError = (field) =>
     errors[field] && <p className="text-red-600 text-xs">{errors[field]}</p>;
-
-  const formFields = [
-    { name: "title", label: "Title", type: "text", placeholder: "Title" },
-    { name: "resume", label: "Resume", type: "file" },
-    {
-      name: "description",
-      label: "Description",
-      type: "editor",
-      placeholder: "",
-    },
-    {
-      name: "subSkillTitle",
-      label: "Sub Skill Title",
-      type: "text",
-      placeholder: "Skill Title",
-    },
-    {
-      name: "projectInquiry",
-      label: "Project Inquiry",
-      type: "text",
-      placeholder: "Project Inquiry",
-    },
-    {
-      name: "inquiryDescription",
-      label: "Inquiry Description",
-      type: "textarea",
-      placeholder: "Inquiry Description",
-    },
-  ];
 
   return (
     <div>
@@ -155,61 +154,135 @@ const AboutSection = () => {
           <input type="hidden" name="id" value={formData.id} />
 
           <div className="grid md:grid-cols-2 gap-4">
-            {formFields.map((field) => (
-              <div
-                key={field.name}
-                className={
-                  field.type === "editor" || field.type === "textarea"
-                    ? "col-span-2"
-                    : ""
-                }
-              >
-                <label className={`block text-sm font-medium text-gray-700 `}>
-                  {field.label}
-                </label>
-                {field.type === "editor" ? (
-                  <JoditEditor
-                    value={formData[field.name]}
-                    tabIndex={1}
-                    onBlur={handleEditorBlur}
-                    className="text-black col-span-2  jodit-editor"
-                  />
-                ) : field.type === "textarea" ? (
-                  <textarea
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-
-                50 rounded-lg border border-gray-300 focus:ring-cyan-600 focus:border-c
-                yan-600 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus-ring-cyan-500 dark:focus:border-cyan-500"
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleInputChange}
-                    placeholder={field.placeholder}
-                    className={`mt-1 block w-full rounded-lg border ${
-                      errors[field.name] ? "border-red-500" : "border-gray-300"
-                    } py-1.5 px-3 text-sm text-gray-900 focus:ring-cyan-500`}
-                  />
-                )}
-                {renderError(field.name)}
-              </div>
-            ))}
+            {/* Title Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="Enter title"
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.title ? "border-red-500" : "border-gray-300"
+                } py-1.5 px-3 text-sm`}
+              />
+              {renderError("title")}
+            </div>
 
-            {/* Image Upload Section */}
+            {/* Resume Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Resume :
+                {formData.resume && (
+                  <span>
+                    <a
+                      className="text-green-400 px-4 pr-4 "
+                      href={formData.resume}
+                    >
+                      (Open)
+                    </a>
+                  </span>
+                )}
+              </label>
+              <input
+                type="file"
+                name="resume"
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    resume: e.target.files[0],
+                  }))
+                }
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.resume ? "border-red-500" : "border-gray-300"
+                } py-1.5 px-3 text-sm`}
+              />
+              {renderError("resume")}
+            </div>
+
+            {/* Description */}
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
+              <JoditEditor
+                value={formData.description}
+                tabIndex={1}
+                onBlur={handleEditorBlur}
+                className="text-black col-span-2 jodit-editor"
+              />
+              {renderError("description")}
+            </div>
+
+            {/* Sub Skill Title */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Sub Skill Title
+              </label>
+              <input
+                type="text"
+                name="subSkillTitle"
+                value={formData.subSkillTitle}
+                onChange={handleInputChange}
+                placeholder="Enter sub-skill title"
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.subSkillTitle ? "border-red-500" : "border-gray-300"
+                } py-1.5 px-3 text-sm`}
+              />
+              {renderError("subSkillTitle")}
+            </div>
+
+            {/* Project Inquiry */}
+            <div className="">
+              <label className="block text-sm font-medium text-gray-700">
+                Project Inquiry
+              </label>
+              <input
+                type="text"
+                name="projectInquiry"
+                value={formData.projectInquiry}
+                onChange={handleInputChange}
+                placeholder="Enter project inquiry"
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.projectInquiry ? "border-red-500" : "border-gray-300"
+                } py-1.5 px-3 text-sm`}
+              />
+              {renderError("projectInquiry")}
+            </div>
+
+            {/* Inquiry Description */}
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Inquiry Description
+              </label>
+              <textarea
+                name="inquiryDescription"
+                value={formData.inquiryDescription}
+                onChange={handleInputChange}
+                placeholder="Enter inquiry description"
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.inquiryDescription
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } py-1.5 px-3 text-sm`}
+              />
+              {renderError("inquiryDescription")}
+            </div>
+
+            {/* Image Upload */}
             <ImageUploadSection
               dropzoneProps={imageDropzone.getRootProps()}
               inputProps={imageDropzone.getInputProps()}
               label="First Image"
-              image={formData.image || formData.imageURL}
-              imageURL={formData.imageURL || formData.image}
-              error={errors.image}
+              image={formData.firstImage || formData.imageURL}
+              imageURL={formData.imageURL || formData.firstImage}
+              error={errors.firstImage}
             />
 
-            {/* Background Image Upload Section */}
+            {/* Background Image Upload */}
             <ImageUploadSection
               dropzoneProps={secondImageDropzone.getRootProps()}
               inputProps={secondImageDropzone.getInputProps()}
@@ -219,6 +292,26 @@ const AboutSection = () => {
               error={errors.secondImage}
             />
 
+            {/* Skills Selection */}
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Skills
+              </label>
+              <CMultiSelect
+                options={skillOptions}
+                value={selectedSkillOptions}
+                onChange={handleSkillsChange}
+                placeholder="Select skills..."
+                search
+                clearable
+                className={`w-full ${
+                  errors.skills ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {renderError("skills")}
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
               className="col-span-2 w-full hover:bg-cyan-600 text-white bg-cyan-500 font-bold py-2 px-4 rounded focus:outline-none"

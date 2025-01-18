@@ -36,7 +36,7 @@ public class SkillController {
         if (newSkill == null) {
             return buildResponse("error", HttpStatus.BAD_REQUEST, "Language not created", null);
         }
-        return buildResponse("success", HttpStatus.CREATED, newSkill.getName() + "created successfully", newSkill);
+        return buildResponse("success", HttpStatus.CREATED, newSkill.getName() + " created successfully", newSkill);
     }
 
     @GetMapping("/{id}")

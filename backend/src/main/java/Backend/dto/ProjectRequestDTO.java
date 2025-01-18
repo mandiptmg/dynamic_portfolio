@@ -2,8 +2,8 @@ package Backend.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import Backend.validation.ConditionalNotNull;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -15,7 +15,8 @@ public class ProjectRequestDTO {
     @NotBlank(message = "Project link is required.")
     private String link;
 
-    @NotNull(message = "Image file is required.")
+    @ConditionalNotNull(message = "Image file is required.", conditionField = "id")
     private MultipartFile image;
+
 
 }

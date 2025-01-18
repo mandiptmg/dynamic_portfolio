@@ -24,16 +24,13 @@ const HeroSection = () => {
 
   useEffect(() => {
     if (heroData) {
-      setFormData({
-        id: heroData.id || null,
-        name: heroData.name || "",
-        position: heroData.position || "",
-        description: heroData.description || "",
-        image: heroData.image || null,
-        bgImage: heroData.bgImage || null,
-      });
+      setFormData((prev) => ({
+        ...prev,
+        ...heroData,
+      }));
     }
   }, [heroData]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

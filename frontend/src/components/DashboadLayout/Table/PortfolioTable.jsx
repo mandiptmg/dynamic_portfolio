@@ -4,44 +4,45 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { axiosInstance } from "../../../Api/Axios";
 import { useGlobalContext } from "../../../context/Context";
-import SkillModel from "../model/skillModel";
+import ProjectModel from "../model/ProjectModel";
 
-const SkillTable = () => {
-  const { skillData, error } = useGlobalContext();
+const PortfolioTable = () => {
+  const { projectData, error } = useGlobalContext();
   const [activeModel, setActiveModel] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
-    icon: "",
-    description: "",
+    link: "",
+    image: null,
   });
 
   const headings = [
+    { key: "image", value: "Image" },
     { key: "name", value: " Name" },
-    { key: "icon", value: " icon" },
-    { key: "description", value: "description" },
+    { key: "link", value: " Link" },
   ];
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+    if (!window.confirm("Are you sure you want to delete this project?"))
+      return;
     try {
-      const response = await axiosInstance.delete(`/skills/${id}`);
-      toast.success(response.data.message || "Skills deleted successfully!");
+      const response = await axiosInstance.delete(`/projects/${id}`);
+      toast.success(response.data.message || "projects deleted successfully!");
       setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to delete the skill."
+        error.response?.data?.message || "Failed to delete the project."
       );
     }
   };
 
-  const handleEdit = (skill) => {
+  const handleEdit = (project) => {
     setFormData({
-      name: skill.name,
-      icon: skill.icon,
-      description: skill.description,
+      name: project.name,
+      link: project.link,
+      image: project.image,
     });
-    setEditId(skill.id);
+    setEditId(project.id);
 
     setActiveModel(true);
   };
@@ -64,11 +65,10 @@ const SkillTable = () => {
     );
   };
 
-
   return (
     <main>
       {activeModel && (
-        <SkillModel
+        <ProjectModel
           isClose={() => setActiveModel(false)}
           activeModel
           formData={formData}
@@ -83,11 +83,11 @@ const SkillTable = () => {
             <span className="text-cyan-500">
               <ChevronRight />
             </span>
-            Skills
+            Protfolio
           </h1>
           <p className="text-gray-600 text-sm">
-            A list of all the Skill in your account including their name, icon,
-            and description.
+            A list of all the Skill in your account including their name, link,
+            and image.
           </p>
         </div>
         <div className="flex flex-col items-center gap-3">
@@ -98,7 +98,7 @@ const SkillTable = () => {
             }}
             className="p-2 rounded-md text-sm text-white bg-cyan-500 hover:bg-cyan-600"
           >
-            Add Skill
+            Add project
           </button>
         </div>
       </div>
@@ -109,13 +109,21 @@ const SkillTable = () => {
         <table className="min-w-full table-auto">
           <TableHeader />
           <tbody>
-            {skillData.length > 0 ? (
-              skillData.map((person, index) => (
+            {projectData.length > 0 ? (
+              projectData.map((person, index) => (
                 <tr key={person.id} className="border-t  hover:bg-gray-50">
                   <td className="py-3 px-6 text-center">{index + 1}</td>
                   {headings.map((heading) => (
                     <td key={heading.key} className="py-3 px-6 text-center">
-                      {person[heading.key]}
+                      {heading.key === "image" ? (
+                        <img
+                          src={person[heading.key]}
+                          alt="Person"
+                          className="w-12 h-12 mx-auto object-top object-cover rounded-md"
+                        />
+                      ) : (
+                        person[heading.key]
+                      )}
                     </td>
                   ))}
                   <td className="py-3 px-6 flex justify-center items-center gap-3">
@@ -150,4 +158,4 @@ const SkillTable = () => {
   );
 };
 
-export default SkillTable;
+export default PortfolioTable;

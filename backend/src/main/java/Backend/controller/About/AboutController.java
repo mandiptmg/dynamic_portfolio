@@ -1,7 +1,6 @@
 package Backend.controller.About;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,22 +25,24 @@ public class AboutController {
     private AboutService aboutService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<About>>> getAbout() {
+    public ResponseEntity<ApiResponse<About>> getAbout() {
         About about = aboutService.getAbout();
         if (about == null) {
             return buildResponse("error", HttpStatus.NOT_FOUND, "No about found", null);
         }
-        return buildResponse("success", HttpStatus.OK, "About retrieved successfully", List.of(about));
+        return buildResponse("success", HttpStatus.OK, "About retrieved successfully", about);
     }
 
     @PostMapping("/save")
     public ResponseEntity<ApiResponse<About>> createAbout(@ModelAttribute @Valid AboutDTO aboutDTO) {
         try {
             About about = aboutService.saveOrUpdateAbout(aboutDTO);
+            String action = (about != null && about.getId() != null) ? "updated" : "saved";
             return buildResponse("success", HttpStatus.CREATED,
-                    "About" + about.getId() != null ? "update" : "save" + "successfully", about);
+                    "About " + action + " successfully", about);
         } catch (Exception e) {
-            return buildResponse("error", HttpStatus.INTERNAL_SERVER_ERROR, "Error creating about", null);
+            String errorMessage = "Error creating or updating About: " + e.getMessage();
+            return buildResponse("error", HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, null);
         }
     }
 

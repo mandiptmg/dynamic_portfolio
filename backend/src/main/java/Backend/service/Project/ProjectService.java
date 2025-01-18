@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import Backend.dto.ProjectRequestDTO;
 import Backend.model.Project.Project;
 import Backend.repository.Project.ProjectRepository;
 import Backend.service.Image.ImageService;
@@ -43,18 +44,21 @@ public class ProjectService {
         return projectRepository.save(projectDetails);
     }
 
-    public Project updateProject(Long id, Project projectDetails, MultipartFile image) throws IOException {
+    public Project updateProject(Long id, ProjectRequestDTO projectRequest) throws IOException {
         return projectRepository.findById(id).map(existingProject -> {
             try {
-                // Handle image update if a new image is provided
-                if (image != null && !image.isEmpty()) {
+
+                // // Handle image update if a new image is provided
+                if (projectRequest.getImage() != null &&
+                        !projectRequest.getImage().isEmpty()) {
                     imageService.deleteImage(PROJECT_CATEGORY, existingProject.getImage());
-                    String imagePath = imageService.saveImage(PROJECT_CATEGORY, image);
+                    String imagePath = imageService.saveImage(PROJECT_CATEGORY,
+                            projectRequest.getImage());
                     existingProject.setImage(imagePath);
                 }
 
-                existingProject.setName(projectDetails.getName());
-                existingProject.setLink(projectDetails.getLink());
+                existingProject.setName(projectRequest.getName());
+                existingProject.setLink(projectRequest.getLink());
                 return projectRepository.save(existingProject);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to update project image", e);

@@ -30,16 +30,16 @@ public class About {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String resumePath;
+    private String resume;
 
     private String subSkillTitle;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Skill> skills;
 
-    private String firstImagePath;
+    private String firstImage;
 
-    private String secondImagePath;
+    private String secondImage;
 
     private String projectInquiry;
 

@@ -3,7 +3,7 @@ import about from "../../assets/about.jpg";
 import resume from '../../assets/mandiptamang.pdf'
 import { FaDownload } from "react-icons/fa";
 const About = () => {
-  const pathname = useLocation();
+const pathname = useLocation();
   return (
     <div className="py-20 w-[90vw]  mx-auto">
       <div className="md:grid grid-cols-2 flex gap-8 md:gap-0 flex-col md:flex-row justify-between items-center">

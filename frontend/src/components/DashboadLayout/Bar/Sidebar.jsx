@@ -74,11 +74,11 @@ const Sidebar = () => {
               <div key={index} className="space-y-2">
                 <button
                   onClick={() => setOpenDropdown(!openDropdown)}
-                  className="px-4 py-3 flex items-center justify-between rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
+                  className="px-4 py-3 flex items-center  justify-between rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
                 >
-                  <div className="flex items-center space-x-4">
+                  <div className="flex  items-center space-x-4">
                     <span className="text-lg">{item.icon}</span>
-                    <span>{item.label}</span>
+                    <span className="no-underline">{item.label}</span>
                   </div>
                   {openDropdown ? (
                     <FaChevronDown className="text-gray-500" />
@@ -94,7 +94,7 @@ const Sidebar = () => {
                         key={subIndex}
                         to={`/dashboard${subItem.path}`}
                         className={({ isActive }) =>
-                          `px-4 py-2 flex items-center space-x-4 rounded-md ${
+                          `px-4 py-2 flex no-underline items-center space-x-4 rounded-md ${
                             isActive
                               ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                               : "text-gray-500 hover:text-cyan-600"
@@ -117,7 +117,7 @@ const Sidebar = () => {
               key={index}
               to={`/dashboard${item.path}`}
               className={({ isActive }) =>
-                `px-4 py-3 flex items-center space-x-4 rounded-md ${
+                `px-4 py-3 flex items-center no-underline space-x-4 rounded-md ${
                   isActive && window.location.pathname === "/dashboard"
                     ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                     : "text-gray-500 hover:text-cyan-600"

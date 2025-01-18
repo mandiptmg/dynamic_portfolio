@@ -13,36 +13,65 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [heroData, setHeroData] = useState(null);
-  // const [aboutData, setAboutData] = useState(null);
+  const [aboutData, setAboutData] = useState(null);
   const [skillData, setSkillData] = useState([]);
+  const [projectData, setProjectData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+
       try {
-        const [heroResponse, skillResponse] = await Promise.all([
-          axiosInstance.get("/hero"),
-          axiosInstance.get("/skills"),
-        ]);
-  
-        const { data: hero } = heroResponse.data;
-        const { data: skill } = skillResponse.data;
-  
-        setHeroData(hero);
-        setSkillData(skill);
-  
+        const [heroResult, skillResult, aboutResult, projectResult] =
+          await Promise.allSettled([
+            axiosInstance.get("/hero"),
+            axiosInstance.get("/skills"),
+            axiosInstance.get("/about"),
+            axiosInstance.get("/projects"),
+          ]);
+
+        if (heroResult.value.data.code === 200) {
+          const { data: hero } = heroResult.value.data;
+          setHeroData(hero);
+        } else {
+          setHeroData(null);
+          console.error("Hero fetch error:", heroResult.reason);
+        }
+
+        if (skillResult.value.data.code === 200) {
+          const { data: skill } = skillResult.value.data;
+          setSkillData(skill);
+        } else {
+          setSkillData([]);
+          console.error("Skills fetch error:", skillResult.reason);
+        }
+
+        if (aboutResult.value.data.code === 200) {
+          const { data: about } = aboutResult.value.data;
+          setAboutData(about);
+        } else {
+          setAboutData(null);
+          console.error("About fetch error:", aboutResult.reason);
+        }
+
+        if (projectResult.value.data.code === 200) {
+          const { data: project } = projectResult.value.data;
+          setProjectData(project);
+        } else {
+          setProjectData(null);
+          console.error("Project fetch error:", projectResult.reason);
+        }
       } catch (error) {
-        const errorMessage = error?.response?.data?.message || "An error occurred";
-        setError(errorMessage);
+        console.error("Unexpected error:", error);
+        setError("An unexpected error occurred");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
+
   useEffect(() => {
     AOS.init({
       // Global settings:
@@ -102,6 +131,8 @@ export const AppProvider = ({ children }) => {
         loading,
         heroData,
         skillData,
+        projectData,
+        aboutData,
         error,
       }}
     >
