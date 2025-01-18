@@ -24,7 +24,7 @@ const AboutSection = () => {
     projectInquiry: aboutData?.projectInquiry || "",
     inquiryDescription: aboutData?.inquiryDescription || "",
     skills: aboutData?.skills?.map((skill) => skill.id) || [],
-    imageURL: null,
+    firstImageURL: null,
     secondImageURL: null,
   });
 
@@ -62,7 +62,7 @@ const AboutSection = () => {
   }, []);
 
   const imageDropzone = useDropzone({
-    onDrop: (files) => handleFileDrop(files, "image"),
+    onDrop: (files) => handleFileDrop(files, "firstImage"),
     accept: "image/*",
     maxFiles: 1,
   });
@@ -120,6 +120,8 @@ const AboutSection = () => {
       setLoading(false);
     }
   };
+
+  console.log(formData)
 
   // Transform skills data for the multi-select component
   const skillOptions = skillData.map((skill) => ({
@@ -277,8 +279,8 @@ const AboutSection = () => {
               dropzoneProps={imageDropzone.getRootProps()}
               inputProps={imageDropzone.getInputProps()}
               label="First Image"
-              image={formData.firstImage || formData.imageURL}
-              imageURL={formData.imageURL || formData.firstImage}
+              image={formData.firstImage || formData.firstImageURL}
+              imageURL={formData.firstImageURL || formData.firstImage}
               error={errors.firstImage}
             />
 

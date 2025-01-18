@@ -19,21 +19,21 @@ spring:
 
   validation:
     enabled: true
-    
+
   mvc:
-    static-path-pattern: /uploads/** # Add this line
+    static-path-pattern: /uploads/** # Static resource mapping for uploaded files
 
   web:
     resources:
       static-locations:
-        - classpath:/static/  / # Default location for app static resources
-        - file:${file-upload.paths.project}
-        - file:${file-upload.paths.hero}
-        - file:${file-upload.paths.about}
-        - file:${file-upload.paths.logo}
-        - file:${file-upload.paths.cover}
-        - file:${file-upload.paths.resume}
-        - file:${file-upload.paths.contact}
+        - classpath:/static/         # Default location for app static resources
+        - file:${file-upload.paths.project}  # Project uploads
+        - file:${file-upload.paths.hero}     # Hero images
+        - file:${file-upload.paths.about}    # About section files
+        - file:${file-upload.paths.logo}     # Logo files
+        - file:${file-upload.paths.cover}    # Cover images
+        - file:${file-upload.paths.resume}   # Resume files
+        - file:${file-upload.paths.contact}  # Contact section uploads
 
   mail:
     host: smtp.gmail.com
@@ -47,26 +47,28 @@ spring:
           starttls.enable: true
     default-encoding: UTF-8
 
+  servlet:
+    multipart:
+      max-file-size: 50MB # Unified file size configuration
+      max-request-size: 50MB
+
 server:
   servlet:
-    context-path: /api/v1
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+    context-path: /api/v1 # Base context path for APIs
 
 file-upload:
   paths:
-    project: ./uploads/project/
-    hero: ./uploads/hero/
-    about: ./uploads/about/
-    logo: ./uploads/logo/
-    cover: ./uploads/cover/
-    resume: ./uploads/resume/
-    contact: ./uploads/contact/
-
+    project: ./uploads/project/ # Directory for project uploads
+    hero: ./uploads/hero/       # Directory for hero images
+    about: ./uploads/about/     # Directory for "About" section files
+    logo: ./uploads/logo/       # Directory for logo files
+    cover: ./uploads/cover/     # Directory for cover images
+    resume: ./uploads/resume/   # Directory for resumes
+    contact: ./uploads/contact/ # Directory for contact-related uploads
 
 base-url: http://localhost:8080
-# Spring Security (Optional if needed)
+
+# Uncomment and configure if Spring Security is needed
 # security:
 #   user:
 #     name: admin
