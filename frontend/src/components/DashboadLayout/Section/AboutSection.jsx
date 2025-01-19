@@ -6,7 +6,12 @@ import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import { axiosInstance } from "../../../Api/Axios";
 import { useGlobalContext } from "../../../context/Context";
-import { CMultiSelect } from "@coreui/react-pro";
+
+import Select from "react-select";
+
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
 
 const AboutSection = () => {
   const [loading, setLoading] = useState(false);
@@ -28,7 +33,7 @@ const AboutSection = () => {
     secondImageURL: null,
   });
 
-  console.log(formData)
+  console.log(formData);
 
   useEffect(() => {
     if (aboutData) {
@@ -86,7 +91,7 @@ const AboutSection = () => {
     const formPayload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (["firstImage", "secondImage","resume"].includes(key)) {
+      if (["firstImage", "secondImage", "resume"].includes(key)) {
         // Handle File objects
         if (value instanceof File) {
           formPayload.append(key, value);
@@ -280,7 +285,7 @@ const AboutSection = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Skills
               </label>
-              <CMultiSelect
+              {/* <CMultiSelect
                 options={skillData.map((skill) => ({
                   label: skill.name,
                   value: skill.id,
@@ -300,6 +305,28 @@ const AboutSection = () => {
                 className={`w-full ${
                   errors.skills ? "border-red-500" : "border-gray-300"
                 }`}
+              /> */}
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                onChange={(selectedOptions) => {
+                  const selectedSkillIds = selectedOptions.map(
+                    (option) => option.value
+                  );
+                  setFormData({ ...formData, skills: selectedSkillIds });
+                }}
+                value={skillData
+                  .filter((skill) => formData.skills.includes(skill.id))
+                  .map((skill) => ({
+                    label: skill.name,
+                    value: skill.id,
+                  }))}
+                isMulti
+                options={skillData.map((skill) => ({
+                  label: skill.name,
+                  value: skill.id,
+                  selected: formData.skills.includes(skill.id),
+                }))}
               />
 
               {renderError("skills")}
