@@ -7,7 +7,7 @@ const Hero = () => {
   return (
     <div
       style={{ backgroundImage: `url(${bgImage})` }}
-      className="bg-no-repeat pt-20  min-h-[90vh] bg-cover bg-blend-overlay dark:bg-black/50"
+      className="bg-no-repeat pt-20  min-h-[89vh] bg-cover bg-blend-overlay    dark:bg-black/50"
     >
       <div className={`w-[90vw]  mx-auto `}>
         <div data-aos="fade-up" className="grid  md:grid-cols-2">

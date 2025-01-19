@@ -26,13 +26,13 @@ public class ContactController {
     private ContactDetailsService contactDetailsService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ContactDetails>>> getContactDetails() {
+    public ResponseEntity<ApiResponse<ContactDetails>> getContactDetails() {
         ContactDetails ContactDetails = contactDetailsService.getContactDetails();
         if (ContactDetails == null) {
             return buildResponse("error", HttpStatus.NOT_FOUND, "No Contact Details found", null);
         }
         return buildResponse("success", HttpStatus.OK, "Contact Details retrieved successfully",
-                List.of(ContactDetails));
+                ContactDetails);
     }
 
     @PostMapping("/save")
@@ -41,7 +41,7 @@ public class ContactController {
         try {
             ContactDetails ContactDetails = contactDetailsService.saveOrUpdatContactDetails(ContactDetailsDTO);
             return buildResponse("success", HttpStatus.CREATED,
-                    "ContactDetails" + ContactDetails.getId() != null ? "update" : "save" + "successfully",
+                    "ContactDetails " + ContactDetails.getId() != null ? "update" : "save" + " successfully",
                     ContactDetails);
         } catch (Exception e) {
             return buildResponse("error", HttpStatus.INTERNAL_SERVER_ERROR, "Error creating ContactDetails", null);

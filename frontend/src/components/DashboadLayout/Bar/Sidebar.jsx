@@ -25,6 +25,8 @@ const menuItems = [
   {icon: <FaPalette/>, label:"Skills", path:"/skill"},
   { icon: <FaBriefcase />, label: "Portfolio", path: "/portfolio" },
   { icon: <FaBriefcase />, label: "Socail Media", path: "/social-media" },
+  { icon: <FaBriefcase />, label: "Contact", path: "/contact" },
+
 
   {
     icon: <FaUserShield />,
@@ -48,7 +50,7 @@ const Sidebar = () => {
       className={`lg:block hidden border-l-2 border bg-white w-64 h-screen overflow-y-auto sticky top-0 overflow-hidden `}
     >
       {/* Logo */}
-      <div className="mx-auto h-16  grid place-items-center">
+      <div className="mx-auto h-20  grid place-items-center">
         <img src={logo} alt="logo" className="w-16 scale-150 h-16 object-contain" />
       </div>
       <hr />

@@ -45,8 +45,8 @@ public class ContactDetailsService {
         }
 
         // set social data
-        if (contactDetailsDTO.getSocialIds() != null && !contactDetailsDTO.getSocialIds().isEmpty()) {
-            existingDetails.setSocialData(socialDataRepository.findAllById(contactDetailsDTO.getSocialIds()));
+        if (contactDetailsDTO.getSocials() != null && !contactDetailsDTO.getSocials().isEmpty()) {
+            existingDetails.setSocialData(socialDataRepository.findAllById(contactDetailsDTO.getSocials()));
         }
 
         return contactRepository.save(existingDetails);

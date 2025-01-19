@@ -17,6 +17,7 @@ import SkillTable from "./components/DashboadLayout/Table/SkillTable";
 import PortfolioTable from "./components/DashboadLayout/Table/PortfolioTable";
 import HeaderTable from "./components/DashboadLayout/Table/HeaderTable";
 import SocialTable from "./components/DashboadLayout/Table/SocialTable";
+import ContactSection from "./components/DashboadLayout/Contact/ContactSection";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
@@ -88,6 +89,8 @@ function App() {
             <Route path="portfolio" element={<PortfolioTable />} />
             <Route path="header" element={<HeaderTable />} />
             <Route path="social-media" element={<SocialTable />} />
+            <Route path="contact" element={<ContactSection />} />
+
 
             {/* <Route path="users" element={<UserTable />} /> */}
             {/* <Route path="roles" element={<RoleTable />} /> */}

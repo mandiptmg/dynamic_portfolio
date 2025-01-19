@@ -18,6 +18,8 @@ export const AppProvider = ({ children }) => {
   const [projectData, setProjectData] = useState([]);
   const [headerData, setHeaderData] = useState([]);
   const [socialData, setSocialData] = useState([]);
+  const [contactData, setContactData] = useState(null);
+
 
 
   // Pagination
@@ -36,6 +38,7 @@ export const AppProvider = ({ children }) => {
           projectResult,
           headerResult,
           socialResult,
+          contactResult
         ] = await Promise.allSettled([
           axiosInstance.get("/hero"),
           axiosInstance.get("/skills"),
@@ -43,6 +46,7 @@ export const AppProvider = ({ children }) => {
           axiosInstance.get("/projects"),
           axiosInstance.get("/headers"),
           axiosInstance.get("/social-data"),
+          axiosInstance.get("/contact-details"),
 
         ]);
 
@@ -94,6 +98,16 @@ export const AppProvider = ({ children }) => {
           setProjectData(null);
           console.error("Project fetch error:", projectResult.reason);
         }
+
+        if (contactResult.value.data.code === 200) {
+          const { data: contact } = contactResult.value.data;
+          setContactData(contact);
+        } else {
+          setContactData(null);
+          console.error("Contact fetch error:", contactResult.reason);
+        }
+
+
       } catch (error) {
         console.error("Unexpected error:", error);
         setError("An unexpected error occurred");
@@ -168,6 +182,7 @@ export const AppProvider = ({ children }) => {
         projectData,
         aboutData,
         socialData,
+        contactData,
         error,
 
         currentPage,

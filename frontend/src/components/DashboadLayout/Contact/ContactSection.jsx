@@ -5,48 +5,45 @@ import JoditEditor from "jodit-react";
 import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import { axiosInstance } from "../../../Api/Axios";
-import { useGlobalContext } from "../../../context/Context";
 
 import Select from "react-select";
 
 import makeAnimated from "react-select/animated";
+import { useGlobalContext } from "../../../context/Context";
 
 const animatedComponents = makeAnimated();
 
-const AboutSection = () => {
+const ContactSection = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const { aboutData, skillData } = useGlobalContext();
+  const { contactData, socialData } = useGlobalContext();
+
 
   const [formData, setFormData] = useState({
-    id: aboutData?.id || null,
-    title: aboutData?.title || "",
-    description: aboutData?.description || "",
-    resume: aboutData?.resume || null,
-    firstImage: aboutData?.firstImage || null,
-    secondImage: aboutData?.secondImage || null,
-    subSkillTitle: aboutData?.subSkillTitle || "",
-    projectInquiry: aboutData?.projectInquiry || "",
-    inquiryDescription: aboutData?.inquiryDescription || "",
-    skills: aboutData?.skills?.map((skill) => skill.id) || [],
-    firstImageURL: null,
-    secondImageURL: null,
+    id: contactData?.id || null,
+    name: contactData?.name || "",
+    position: contactData?.position || "",
+    description: contactData?.description || "",
+    contactImage: contactData?.contactImage || null,
+    subTitle: contactData?.subTitle || "",
+    socials: contactData?.socialData?.map((social) => social.id) || [],
+    contactImageURL: null,
   });
 
 
   useEffect(() => {
-    if (aboutData) {
+    if (contactData) {
       setFormData((prev) => ({
         ...prev,
-        ...aboutData,
-        skills: aboutData.skills?.map((skill) => skill.id) || [],
+        ...contactData,
+        socials: contactData.socialData?.map((social) => social.id) || [],
       }));
     }
-  }, [aboutData]);
+  }, [contactData]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: files ? files[0] : value }));
   };
 
   const handleFileDrop = useCallback((acceptedFiles, fieldName) => {
@@ -57,24 +54,14 @@ const AboutSection = () => {
         [fieldName]: file,
         [`${fieldName}URL`]: URL.createObjectURL(file),
       }));
-      toast.success(
-        `${
-          fieldName === "firstImage" ? "First Image" : "Second image"
-        } uploaded successfully!`
-      );
+      toast.success(`${fieldName} uploaded successfully!`);
     } else {
       toast.error("No file uploaded!");
     }
   }, []);
 
   const imageDropzone = useDropzone({
-    onDrop: (files) => handleFileDrop(files, "firstImage"),
-    accept: "image/*",
-    maxFiles: 1,
-  });
-
-  const secondImageDropzone = useDropzone({
-    onDrop: (files) => handleFileDrop(files, "secondImage"),
+    onDrop: (files) => handleFileDrop(files, "contactImage"),
     accept: "image/*",
     maxFiles: 1,
   });
@@ -90,7 +77,7 @@ const AboutSection = () => {
     const formPayload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (["firstImage", "secondImage", "resume"].includes(key)) {
+      if (["firstImage"].includes(key)) {
         // Handle File objects
         if (value instanceof File) {
           formPayload.append(key, value);
@@ -104,16 +91,22 @@ const AboutSection = () => {
     });
 
     try {
-      const response = await axiosInstance.post("/about/save", formPayload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.post(
+        "/contact-details/save",
+        formPayload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       const { code, message } = response.data;
 
       if ([200, 201].includes(code)) {
         setTimeout(() => window.location.reload(), 1000);
-        toast.success(message || "About created/updated successfully");
+        toast.success(
+          message || "contact details created/updated successfully"
+        );
         setErrors({});
       }
     } catch (error) {
@@ -133,7 +126,7 @@ const AboutSection = () => {
   return (
     <div>
       <h1 className="text-lg capitalize font-semibold flex items-center gap-1">
-        <FaChevronRight className="text-cyan-500" /> About
+        <FaChevronRight className="text-cyan-500" /> Contact Details
       </h1>
 
       <div className="p-4 bg-white mt-4 rounded-md">
@@ -141,53 +134,40 @@ const AboutSection = () => {
           <input type="hidden" name="id" value={formData.id} />
 
           <div className="grid md:grid-cols-2 gap-4">
-            {/* Title Field */}
+            {/* Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Title
+                Name
               </label>
               <input
                 type="text"
-                name="title"
-                value={formData.title}
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
-                placeholder="Enter title"
+                placeholder="Enter name"
                 className={`mt-1 block w-full rounded-lg border ${
-                  errors.title ? "border-red-500" : "border-gray-300"
+                  errors.name ? "border-red-500" : "border-gray-300"
                 } py-1.5 px-3 text-sm`}
               />
-              {renderError("title")}
+              {renderError("name")}
             </div>
 
-            {/* Resume Upload */}
+            {/* Position Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Resume :
-                {formData.resume && (
-                  <span>
-                    <a
-                      className="text-green-400 px-4 pr-4 "
-                      href={formData.resume}
-                    >
-                      (Open)
-                    </a>
-                  </span>
-                )}
+                Position
               </label>
               <input
-                type="file"
-                name="resume"
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    resume: e.target.files[0],
-                  }))
-                }
+                type="text"
+                name="position"
+                value={formData.position}
+                onChange={handleInputChange}
+                placeholder="Enter position"
                 className={`mt-1 block w-full rounded-lg border ${
-                  errors.resume ? "border-red-500" : "border-gray-300"
+                  errors.position ? "border-red-500" : "border-gray-300"
                 } py-1.5 px-3 text-sm`}
               />
-              {renderError("resume")}
+              {renderError("position")}
             </div>
 
             {/* Description */}
@@ -204,111 +184,64 @@ const AboutSection = () => {
               {renderError("description")}
             </div>
 
-            {/* Sub Skill Title */}
+            {/* Sub Title */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Sub Skill Title
+                Sub Title
               </label>
               <input
                 type="text"
-                name="subSkillTitle"
-                value={formData.subSkillTitle}
+                name="subTitle"
+                value={formData.subTitle}
                 onChange={handleInputChange}
-                placeholder="Enter sub-skill title"
+                placeholder="Enter sub title"
                 className={`mt-1 block w-full rounded-lg border ${
-                  errors.subSkillTitle ? "border-red-500" : "border-gray-300"
+                  errors.subTitle ? "border-red-500" : "border-gray-300"
                 } py-1.5 px-3 text-sm`}
               />
-              {renderError("subSkillTitle")}
-            </div>
-
-            {/* Project Inquiry */}
-            <div className="">
-              <label className="block text-sm font-medium text-gray-700">
-                Project Inquiry
-              </label>
-              <input
-                type="text"
-                name="projectInquiry"
-                value={formData.projectInquiry}
-                onChange={handleInputChange}
-                placeholder="Enter project inquiry"
-                className={`mt-1 block w-full rounded-lg border ${
-                  errors.projectInquiry ? "border-red-500" : "border-gray-300"
-                } py-1.5 px-3 text-sm`}
-              />
-              {renderError("projectInquiry")}
-            </div>
-
-            {/* Inquiry Description */}
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Inquiry Description
-              </label>
-              <textarea
-                name="inquiryDescription"
-                value={formData.inquiryDescription}
-                onChange={handleInputChange}
-                placeholder="Enter inquiry description"
-                className={`mt-1 block w-full rounded-lg border ${
-                  errors.inquiryDescription
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } py-1.5 px-3 text-sm`}
-              />
-              {renderError("inquiryDescription")}
+              {renderError("subTitle")}
             </div>
 
             {/* Image Upload */}
             <ImageUploadSection
               dropzoneProps={imageDropzone.getRootProps()}
               inputProps={imageDropzone.getInputProps()}
-              label="First Image"
-              image={formData.firstImage || formData.firstImageURL}
-              imageURL={formData.firstImageURL || formData.firstImage}
-              error={errors.firstImage}
+              label="Contact Image"
+              image={formData.contactImage || formData.contactImageURL}
+              imageURL={formData.contactImageURL || formData.contactImage}
+              error={errors.contactImage}
             />
 
-            {/* Background Image Upload */}
-            <ImageUploadSection
-              dropzoneProps={secondImageDropzone.getRootProps()}
-              inputProps={secondImageDropzone.getInputProps()}
-              label="Second Image"
-              image={formData.secondImage || formData.secondImageURL}
-              imageURL={formData.secondImageURL || formData.secondImage}
-              error={errors.secondImage}
-            />
-
-            {/* Skills Selection */}
+            {/* Socials Selection */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Skills
+                Socials
               </label>
-              
+
               <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
                 onChange={(selectedOptions) => {
-                  const selectedSkillIds = selectedOptions.map(
+                  const selectedSocialIds = selectedOptions.map(
                     (option) => option.value
                   );
-                  setFormData({ ...formData, skills: selectedSkillIds });
+                  setFormData({ ...formData, socials: selectedSocialIds });
                 }}
-                value={skillData
-                  .filter((skill) => formData.skills.includes(skill.id))
-                  .map((skill) => ({
-                    label: skill.name,
-                    value: skill.id,
+                value={socialData
+                  .filter((social) => formData.socials.includes(social.id))
+                  .map((social) => ({
+                    label: social.name,
+                    value: social.id,
                   }))}
                 isMulti
-                options={skillData.map((skill) => ({
-                  label: skill.name,
-                  value: skill.id,
-                  selected: formData.skills.includes(skill.id),
+                options={socialData.map((social) => ({
+                  label: social.name,
+                  value: social.id,
+                  selected: formData.socials.includes(social.id),
                 }))}
               />
 
-              {renderError("skills")}
+              {renderError("socials")}
             </div>
 
             {/* Submit Button */}
@@ -320,8 +253,8 @@ const AboutSection = () => {
               {loading
                 ? "Saving..."
                 : formData.id
-                ? "Update About"
-                : "Create About"}
+                ? "Update Contact"
+                : "Create Contact"}
             </button>
           </div>
         </form>
@@ -363,4 +296,4 @@ const ImageUploadSection = ({
   </div>
 );
 
-export default AboutSection;
+export default ContactSection;

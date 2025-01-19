@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import Backend.validation.ConditionalNotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -23,10 +24,10 @@ public class ContactDetailsDTO {
     @NotBlank(message = "Sub Title is required")
     private String subTitle;
 
-    @NotNull(message = "social Ids are required")
-    private List<Long> socialIds;
+    @NotNull(message = "socials  are required")
+    private List<Long> socials;
 
-    @NotNull(message = "Contact Image is required")
+    @ConditionalNotNull(message = "Contact Image file is required.", conditionField = "id")
     private MultipartFile contactImage;
 
 }
