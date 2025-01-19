@@ -28,6 +28,8 @@ const AboutSection = () => {
     secondImageURL: null,
   });
 
+  console.log(formData)
+
   useEffect(() => {
     if (aboutData) {
       setFormData((prev) => ({
@@ -119,27 +121,6 @@ const AboutSection = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  console.log(formData)
-
-  // Transform skills data for the multi-select component
-  const skillOptions = skillData.map((skill) => ({
-    value: skill.id,
-    label: skill.name,
-  }));
-
-  // Transform selected skills for the multi-select value
-  const selectedSkillOptions = skillOptions.filter((option) =>
-    formData.skills.includes(option.value)
-  );
-
-  // Handle skills selection change
-  const handleSkillsChange = (selected) => {
-    setFormData((prev) => ({
-      ...prev,
-      skills: selected.map((option) => option.value),
-    }));
   };
 
   const renderError = (field) =>
@@ -300,9 +281,19 @@ const AboutSection = () => {
                 Skills
               </label>
               <CMultiSelect
-                options={skillOptions}
-                value={selectedSkillOptions}
-                onChange={handleSkillsChange}
+                options={skillData.map((skill) => ({
+                  label: skill.name,
+                  value: skill.id,
+                  selected: formData.skills.includes(skill.id),
+                }))}
+              
+                onChange={(selectedOptions) => {
+                  const selectedSkillIds = selectedOptions.map(
+                    (option) => option.value
+                  );
+                  setFormData({ ...formData, skills: selectedSkillIds });
+                }}
+                selectionType="tags"
                 placeholder="Select skills..."
                 search
                 clearable
@@ -310,6 +301,7 @@ const AboutSection = () => {
                   errors.skills ? "border-red-500" : "border-gray-300"
                 }`}
               />
+
               {renderError("skills")}
             </div>
 
