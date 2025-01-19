@@ -19,11 +19,13 @@ import { useState } from "react";
 // Define menu items
 const menuItems = [
   { icon: <FaHome />, label: "Dashboard", path: "" },
+  { icon: <FaUser />, label: "Header", path: "/header" },
   { icon: <FaStar />, label: "Hero", path: "/hero" },
   { icon: <FaPager />, label: "About", path: "/about" },
   {icon: <FaPalette/>, label:"Skills", path:"/skill"},
-  { icon: <FaBriefcase />, label: "portfolio", path: "/portfolio" },
-  { icon: <FaUser />, label: "Account", path: "/account" },
+  { icon: <FaBriefcase />, label: "Portfolio", path: "/portfolio" },
+  { icon: <FaBriefcase />, label: "Socail Media", path: "/social-media" },
+
   {
     icon: <FaUserShield />,
     label: "Users",
@@ -43,11 +45,11 @@ const Sidebar = () => {
   return (
     <div
       id="sidebar"
-      className={`lg:block hidden border-l-2 border bg-white w-64 h-screen`}
+      className={`lg:block hidden border-l-2 border bg-white w-64 h-screen overflow-y-auto sticky top-0 overflow-hidden `}
     >
       {/* Logo */}
-      <div className="mx-auto h-20 grid place-items-center">
-        <img src={logo} alt="logo" className="h-16 scale-125 w-16 object-contain" />
+      <div className="mx-auto h-16  grid place-items-center">
+        <img src={logo} alt="logo" className="w-16 scale-150 h-16 object-contain" />
       </div>
       <hr />
 

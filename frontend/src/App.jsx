@@ -15,6 +15,8 @@ import HeroSection from "./components/DashboadLayout/Section/HeroSection";
 import AboutSection from "./components/DashboadLayout/Section/AboutSection";
 import SkillTable from "./components/DashboadLayout/Table/SkillTable";
 import PortfolioTable from "./components/DashboadLayout/Table/PortfolioTable";
+import HeaderTable from "./components/DashboadLayout/Table/HeaderTable";
+import SocialTable from "./components/DashboadLayout/Table/SocialTable";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
@@ -80,18 +82,17 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="hero" element ={<HeroSection/>} />
-            <Route path="about" element ={<AboutSection/>} />
-            <Route path="skill" element ={<SkillTable/>} />
-            <Route path="portfolio" element ={<PortfolioTable/>} />
-
-
+            <Route path="hero" element={<HeroSection />} />
+            <Route path="about" element={<AboutSection />} />
+            <Route path="skill" element={<SkillTable />} />
+            <Route path="portfolio" element={<PortfolioTable />} />
+            <Route path="header" element={<HeaderTable />} />
+            <Route path="social-media" element={<SocialTable />} />
 
             {/* <Route path="users" element={<UserTable />} /> */}
             {/* <Route path="roles" element={<RoleTable />} /> */}
           </Route>
           <Route path="/dashboard/*" element={<DashboardNotFound />} />
-
         </Route>
       </Routes>
     </>

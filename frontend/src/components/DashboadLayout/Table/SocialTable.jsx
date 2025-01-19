@@ -4,46 +4,45 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { axiosInstance } from "../../../Api/Axios";
 import { useGlobalContext } from "../../../context/Context";
-import SkillModel from "../model/skillModel";
-import Pagination from "../../pagination/Pagination";
+import SocialModel from "../model/SocialModel";
 
-const SkillTable = () => {
-  const { skillData, error, currentPage, setCurrentPage, itemsPerPage } =
-    useGlobalContext();
+const SocialTable = () => {
+  const { socialData, error } = useGlobalContext();
   const [activeModel, setActiveModel] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
+    link: "",
     icon: "",
-    description: "",
   });
 
   const headings = [
     { key: "name", value: " Name" },
-    { key: "icon", value: " icon" },
-    { key: "description", value: "description" },
+    { key: "icon", value: "Icon" },
+    { key: "link", value: " Link" },
   ];
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+    if (!window.confirm("Are you sure you want to delete this social media?"))
+      return;
     try {
-      const response = await axiosInstance.delete(`/skills/${id}`);
-      toast.success(response.data.message || "Skills deleted successfully!");
+      const response = await axiosInstance.delete(`/social-data/${id}`);
+      toast.success(response.data.message || "social media deleted successfully!");
       setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to delete the skill."
+        error.response?.data?.message || "Failed to delete the social media."
       );
     }
   };
 
-  const handleEdit = (skill) => {
+  const handleEdit = (social ) => {
     setFormData({
-      name: skill.name,
-      icon: skill.icon,
-      description: skill.description,
+      name: social .name,
+      link: social .link,
+      icon: social .icon,
     });
-    setEditId(skill.id);
+    setEditId(social .id);
 
     setActiveModel(true);
   };
@@ -66,32 +65,10 @@ const SkillTable = () => {
     );
   };
 
-  // Calculate current items to display based on pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = skillData.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const onNextPage = async () => {
-    if (currentPage < Math.ceil(skillData.length / itemsPerPage)) {
-      setCurrentPage(currentPage + 1);
-      // Fetch data for the next page if needed
-    }
-  };
-
-  const onPrevPage = async () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      // Fetch data for the previous page if needed
-    }
-  };
-
   return (
     <main>
       {activeModel && (
-        <SkillModel
+        <SocialModel
           isClose={() => setActiveModel(false)}
           activeModel
           formData={formData}
@@ -106,11 +83,11 @@ const SkillTable = () => {
             <span className="text-cyan-500">
               <ChevronRight />
             </span>
-            Skills
+            Headers
           </h1>
           <p className="text-gray-600 text-sm">
-            A list of all the Skill in your account including their name, icon,
-            and description.
+            A list of all the Skill in your account including their name, link,
+            and icon.
           </p>
         </div>
         <div className="flex flex-col items-center gap-3">
@@ -121,7 +98,7 @@ const SkillTable = () => {
             }}
             className="p-2 rounded-md text-sm text-white bg-cyan-500 hover:bg-cyan-600"
           >
-            Add Skill
+            Add header
           </button>
         </div>
       </div>
@@ -132,34 +109,27 @@ const SkillTable = () => {
         <table className="min-w-full table-auto">
           <TableHeader />
           <tbody>
-            {currentItems.length > 0 ? (
-              currentItems.map((skill, index) => (
-                <tr key={skill.id} className="border-t  hover:bg-gray-50">
+            {socialData.length > 0 ? (
+              socialData.map((person, index) => (
+                <tr key={person.id} className="border-t  hover:bg-gray-50">
                   <td className="py-3 px-6 text-center">{index + 1}</td>
                   {headings.map((heading) => (
                     <td key={heading.key} className="py-3 px-6 text-center">
-                      {heading.key === "description" ? (
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-600">
-                            {skill[heading.key]?.slice(0, 50)}
-                            {skill[heading.key]?.length > 50 && "..."}
-                          </span>
-                        </div>
-                      ) : (
-                        skill[heading.key]
-                      )}
+                      {
+                        person[heading.key]
+                      }
                     </td>
                   ))}
                   <td className="py-3 px-6 flex justify-center items-center gap-3">
                     <button
-                      onClick={() => handleEdit(skill)}
+                      onClick={() => handleEdit(person)}
                       title="Edit"
                       className="text-blue-500 hover:text-blue-700"
                     >
                       <ClipboardPen />
                     </button>
                     <button
-                      onClick={() => handleDelete(skill.id)}
+                      onClick={() => handleDelete(person.id)}
                       title="Delete"
                       className="text-red-500 hover:text-red-700"
                     >
@@ -178,17 +148,8 @@ const SkillTable = () => {
           </tbody>
         </table>
       </div>
-      {skillData.length > itemsPerPage && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(skillData.length / itemsPerPage)}
-          onPageChange={paginate}
-          onNextPage={onNextPage}
-          onPrevPage={onPrevPage}
-        />
-      )}
     </main>
   );
 };
 
-export default SkillTable;
+export default SocialTable;

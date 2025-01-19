@@ -16,19 +16,52 @@ export const AppProvider = ({ children }) => {
   const [aboutData, setAboutData] = useState(null);
   const [skillData, setSkillData] = useState([]);
   const [projectData, setProjectData] = useState([]);
+  const [headerData, setHeaderData] = useState([]);
+  const [socialData, setSocialData] = useState([]);
+
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
       try {
-        const [heroResult, skillResult, aboutResult, projectResult] =
-          await Promise.allSettled([
-            axiosInstance.get("/hero"),
-            axiosInstance.get("/skills"),
-            axiosInstance.get("/about"),
-            axiosInstance.get("/projects"),
-          ]);
+        const [
+          heroResult,
+          skillResult,
+          aboutResult,
+          projectResult,
+          headerResult,
+          socialResult,
+        ] = await Promise.allSettled([
+          axiosInstance.get("/hero"),
+          axiosInstance.get("/skills"),
+          axiosInstance.get("/about"),
+          axiosInstance.get("/projects"),
+          axiosInstance.get("/headers"),
+          axiosInstance.get("/social-data"),
+
+        ]);
+
+        if (socialResult.value.data.code === 200) {
+          const { data: social } = socialResult.value.data;
+          setSocialData(social);
+        } else {
+          setSocialData(null);
+          console.error("social media fetch error:", socialResult.reason);
+        }
+
+
+        if (headerResult.value.data.code === 200) {
+          const { data: header } = headerResult.value.data;
+          setHeaderData(header);
+        } else {
+          setHeaderData(null);
+          console.error("Header fetch error:", headerResult.reason);
+        }
 
         if (heroResult.value.data.code === 200) {
           const { data: hero } = heroResult.value.data;
@@ -130,10 +163,16 @@ export const AppProvider = ({ children }) => {
         setScroll,
         loading,
         heroData,
+        headerData,
         skillData,
         projectData,
         aboutData,
+        socialData,
         error,
+
+        currentPage,
+        setCurrentPage,
+        itemsPerPage,
       }}
     >
       {children}
