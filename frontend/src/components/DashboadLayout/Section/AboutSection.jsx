@@ -86,7 +86,7 @@ const AboutSection = () => {
     const formPayload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (["firstImage", "secondImage", "resume"].includes(key)) {
+      if (["firstImage", "secondImage","resume"].includes(key)) {
         // Handle File objects
         if (value instanceof File) {
           formPayload.append(key, value);

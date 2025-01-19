@@ -110,24 +110,34 @@ const SkillTable = () => {
           <TableHeader />
           <tbody>
             {skillData.length > 0 ? (
-              skillData.map((person, index) => (
-                <tr key={person.id} className="border-t  hover:bg-gray-50">
+              skillData.map((skill, index) => (
+                <tr key={skill.id} className="border-t  hover:bg-gray-50">
                   <td className="py-3 px-6 text-center">{index + 1}</td>
                   {headings.map((heading) => (
-                    <td key={heading.key} className="py-3 px-6 text-center">
-                      {person[heading.key]}
-                    </td>
+                  <td key={heading.key} className="py-3 px-6 text-center">
+                  {heading.key === "description" ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600">
+                        {skill[heading.key]?.slice(0, 50)}
+                        {skill[heading.key]?.length > 50 && "..."}
+                      </span>
+                    </div>
+                  ) : (
+                    skill[heading.key]
+                  )}
+                </td>
+                
                   ))}
                   <td className="py-3 px-6 flex justify-center items-center gap-3">
                     <button
-                      onClick={() => handleEdit(person)}
+                      onClick={() => handleEdit(skill)}
                       title="Edit"
                       className="text-blue-500 hover:text-blue-700"
                     >
                       <ClipboardPen />
                     </button>
                     <button
-                      onClick={() => handleDelete(person.id)}
+                      onClick={() => handleDelete(skill.id)}
                       title="Delete"
                       className="text-red-500 hover:text-red-700"
                     >

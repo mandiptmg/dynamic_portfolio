@@ -10,7 +10,8 @@ import {
   SiRedux,
   SiMongodb,
   SiMysql,
-  SiLaravel
+  SiLaravel,
+  SiSpringboot
 } from 'react-icons/si'
 import {
   FaProjectDiagram,
@@ -23,6 +24,7 @@ import {
   FaCss3,
   FaGitAlt,
   FaEnvelope,
+  FaJava,
 } from 'react-icons/fa'
 // import { MdMiscellaneousServices } from 'react-icons/md'
 
@@ -180,6 +182,20 @@ export const portfolioItems = [
   icon: SiMysql,
   description:
     'Leveraged MySQL for reliable data storage and management, ensuring optimal performance and security.',
+},
+{
+  id: 15,
+  title: 'Java',
+  icon: FaJava, // Replace with the correct icon component if available
+  description:
+    'Implemented Java for scalable, high-performance solutions, ensuring platform independence and reliability.',
+},
+{
+  id: 16,
+  title: 'Spring Boot',
+  icon: SiSpringboot, // Replace with the correct icon component if available
+  description:
+    'Developed robust microservices and APIs using Spring Boot, emphasizing simplicity, efficiency, and security.',
 }
 ]
 
