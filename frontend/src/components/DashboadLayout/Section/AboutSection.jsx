@@ -19,18 +19,18 @@ const AboutSection = () => {
   const { aboutData, skillData } = useGlobalContext();
 
   const [formData, setFormData] = useState({
-    id: aboutData?.id || null,
+    id: aboutData?.id || "",
     title: aboutData?.title || "",
     description: aboutData?.description || "",
-    resume: aboutData?.resume || null,
-    firstImage: aboutData?.firstImage || null,
-    secondImage: aboutData?.secondImage || null,
+    resume: aboutData?.resume || "",
+    firstImage: aboutData?.firstImage || "",
+    secondImage: aboutData?.secondImage || "",
     subSkillTitle: aboutData?.subSkillTitle || "",
     projectInquiry: aboutData?.projectInquiry || "",
     inquiryDescription: aboutData?.inquiryDescription || "",
     skills: aboutData?.skills?.map((skill) => skill.id) || [],
-    firstImageURL: null,
-    secondImageURL: null,
+    firstImageURL: "",
+    secondImageURL: "",
   });
 
 
@@ -48,10 +48,12 @@ const AboutSection = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  
 
   const handleFileDrop = useCallback((acceptedFiles, fieldName) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
+
       setFormData((prev) => ({
         ...prev,
         [fieldName]: file,

@@ -18,3 +18,9 @@
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
       rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   }
+
+
+* {
+  scrollbar-width: thin; 
+  scrollbar-color: #00ADB5 #f1f1f1; 
+}

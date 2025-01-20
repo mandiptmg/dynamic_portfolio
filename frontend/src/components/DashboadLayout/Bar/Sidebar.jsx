@@ -1,57 +1,72 @@
 import {
   FaHome,
-  FaUser,
+  FaUserAlt,
   FaSignOutAlt,
   FaUsers,
-  FaUserShield,
+  FaUserTie,
   FaChevronDown,
   FaChevronRight,
-  FaBriefcase,
   FaStar,
-  FaPager,
-  FaPalette,
+  FaInfoCircle,
+  FaBrush,
+  FaEnvelope,
+  FaUserCog,
+  FaLaptopCode,
+  FaLock,
+  FaServer,
 } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-// import { useGlobalContext } from "../../context/Context";
+import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../../assets/logo-black.png";
 import { useState } from "react";
 
 // Define menu items
 const menuItems = [
   { icon: <FaHome />, label: "Dashboard", path: "" },
-  { icon: <FaUser />, label: "Header", path: "/header" },
   { icon: <FaStar />, label: "Hero", path: "/hero" },
-  { icon: <FaPager />, label: "About", path: "/about" },
-  {icon: <FaPalette/>, label:"Skills", path:"/skill"},
-  { icon: <FaBriefcase />, label: "Portfolio", path: "/portfolio" },
-  { icon: <FaBriefcase />, label: "Socail Media", path: "/social-media" },
-  { icon: <FaBriefcase />, label: "Contact", path: "/contact" },
-
+  { icon: <FaInfoCircle />, label: "About", path: "/about" },
+  { icon: <FaBrush />, label: "Skills", path: "/skill" },
+  { icon: <FaLaptopCode />, label: "Portfolio", path: "/portfolio" },
+  { icon: <FaUserTie />, label: "Social Media", path: "/social-media" },
+  { icon: <FaEnvelope />, label: "Contact", path: "/contact" },
 
   {
-    icon: <FaUserShield />,
+    icon: <FaUserCog />,
     label: "Users",
     isDropdown: true,
     subMenu: [
-      { icon: <FaUsers />, label: "all", path: "/users" },
-      { icon: <FaUserShield />, label: "Roles", path: "/roles" },
+      { icon: <FaUsers />, label: "All", path: "/users" },
+      { icon: <FaUserTie />, label: "Roles", path: "/roles" },
+      { icon: <FaLock />, label: "Permissions", path: "/permissions" },
+    ],
+  },
+  {
+    icon: <FaServer />,
+    label: "Setting",
+    isDropdown: true,
+    subMenu: [
+      { icon: <FaUserAlt />, label: "Header", path: "/header" },
+      { icon: <FaLock />, label: "Site Setting", path: "/site-setting" },
     ],
   },
   { icon: <FaSignOutAlt />, label: "Logout", path: "/logout", isLogout: true },
 ];
 
 const Sidebar = () => {
-  // const { logout } = useGlobalContext();
   const [openDropdown, setOpenDropdown] = useState(false); // State for dropdown toggle
+  const location = useLocation(); // Get current location from react-router
 
   return (
     <div
       id="sidebar"
-      className={`lg:block hidden border-l-2 border bg-white w-64 h-screen overflow-y-auto sticky top-0 overflow-hidden `}
+      className="lg:block hidden border-l-2 border bg-white w-64 h-screen overflow-y-auto overflow-hidden"
     >
       {/* Logo */}
-      <div className="mx-auto h-20  grid place-items-center">
-        <img src={logo} alt="logo" className="w-16 scale-150 h-16 object-contain" />
+      <div className="mx-auto h-20 grid place-items-center">
+        <img
+          src={logo}
+          alt="logo"
+          className="w-16 scale-150 h-16 object-contain"
+        />
       </div>
       <hr />
 
@@ -63,7 +78,6 @@ const Sidebar = () => {
             return (
               <button
                 key={index}
-                // onClick={logout}
                 className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
               >
                 <span className="text-lg">{item.icon}</span>
@@ -78,9 +92,9 @@ const Sidebar = () => {
               <div key={index} className="space-y-2">
                 <button
                   onClick={() => setOpenDropdown(!openDropdown)}
-                  className="px-4 py-3 flex items-center  justify-between rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
+                  className="px-4 py-3 flex items-center justify-between rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
                 >
-                  <div className="flex  items-center space-x-4">
+                  <div className="flex items-center space-x-4">
                     <span className="text-lg">{item.icon}</span>
                     <span className="no-underline">{item.label}</span>
                   </div>
@@ -99,7 +113,8 @@ const Sidebar = () => {
                         to={`/dashboard${subItem.path}`}
                         className={({ isActive }) =>
                           `px-4 py-2 flex no-underline items-center space-x-4 rounded-md ${
-                            isActive
+                            isActive ||
+                            location.pathname === `/dashboard${subItem.path}`
                               ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
                               : "text-gray-500 hover:text-cyan-600"
                           }`
@@ -120,13 +135,11 @@ const Sidebar = () => {
             <NavLink
               key={index}
               to={`/dashboard${item.path}`}
-              className={({ isActive }) =>
-                `px-4 py-3 flex items-center no-underline space-x-4 rounded-md ${
-                  isActive && window.location.pathname === "/dashboard"
-                    ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
-                    : "text-gray-500 hover:text-cyan-600"
-                }`
-              }
+              className={`px-4 py-3 flex items-center no-underline space-x-4 rounded-md ${
+                location.pathname === `/dashboard${item.path}`
+                  ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
+                  : "text-gray-500 hover:text-cyan-600"
+              }`}
             >
               <span className="text-lg">{item.icon}</span>
               <span>{item.label}</span>

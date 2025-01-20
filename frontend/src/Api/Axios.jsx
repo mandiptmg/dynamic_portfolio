@@ -18,22 +18,6 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request interceptor to dynamically set Content-Type based on request data
-axiosInstance.interceptors.request.use(
-    (config) => {
-      if (config.headers["Content-Type"] === "multipart/form-data") {
-        // Axios will automatically set the proper boundary for multipart/form-data requests
-        return config;
-      }
-      // Keep default 'application/json' for regular JSON payloads
-      config.headers["Content-Type"] = "application/json";
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-  
 
 // ✅ Token Management Helpers
 // const tokenStorage = {

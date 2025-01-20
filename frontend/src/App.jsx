@@ -39,8 +39,8 @@ function App() {
         <div
           className={
             menu
-              ? "hidden  duration-300  transition-all transform ease-in-out -translate-x-36"
-              : ""
+              ? "hidden   duration-300  transition-all transform ease-in-out -translate-x-36"
+              : "sticky top-0"
           }
         >
           <Sidebar />
