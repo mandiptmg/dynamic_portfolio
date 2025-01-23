@@ -12,14 +12,14 @@ const HeroSection = () => {
   const [errors, setErrors] = useState({});
   const { heroData } = useGlobalContext();
   const [formData, setFormData] = useState({
-    id: heroData?.id || null,
+    id: heroData?.id || "",
     name: heroData?.name || "",
     position: heroData?.position || "",
     description: heroData?.description || "",
-    image: heroData?.image || null,
-    bgImage: heroData?.bgImage || null,
-    imageURL: null,
-    bgImageURL: null,
+    image: heroData?.image || "",
+    bgImage: heroData?.bgImage || "",
+    imageURL: "",
+    bgImageURL: "",
   });
 
   useEffect(() => {

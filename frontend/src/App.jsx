@@ -18,6 +18,7 @@ import PortfolioTable from "./components/DashboadLayout/Table/PortfolioTable";
 import HeaderTable from "./components/DashboadLayout/Table/HeaderTable";
 import SocialTable from "./components/DashboadLayout/Table/SocialTable";
 import ContactSection from "./components/DashboadLayout/Contact/ContactSection";
+import SettingSection from "./components/DashboadLayout/Section/SettingSection";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
@@ -90,6 +91,8 @@ function App() {
             <Route path="header" element={<HeaderTable />} />
             <Route path="social-media" element={<SocialTable />} />
             <Route path="contact" element={<ContactSection />} />
+            <Route path="site-setting" element={<SettingSection />} />
+
 
 
             {/* <Route path="users" element={<UserTable />} /> */}

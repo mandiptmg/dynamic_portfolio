@@ -39,8 +39,9 @@ public class ContactController {
             @ModelAttribute @Valid ContactDetailsDTO ContactDetailsDTO) {
         try {
             ContactDetails ContactDetails = contactDetailsService.saveOrUpdatContactDetails(ContactDetailsDTO);
+            String action = ContactDetails.getId() != null ? "update" : "save" ;
             return buildResponse("success", HttpStatus.CREATED,
-                    "ContactDetails " + ContactDetails.getId() != null ? "update" : "save" + " successfully",
+                    "ContactDetails "+ action +" successfully",
                     ContactDetails);
         } catch (Exception e) {
             return buildResponse("error", HttpStatus.INTERNAL_SERVER_ERROR, "Error creating ContactDetails", null);

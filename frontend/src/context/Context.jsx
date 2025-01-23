@@ -19,6 +19,8 @@ export const AppProvider = ({ children }) => {
   const [headerData, setHeaderData] = useState([]);
   const [socialData, setSocialData] = useState([]);
   const [contactData, setContactData] = useState(null);
+  const [siteSettingData, setSiteSettingData] = useState(null);
+
 
 
 
@@ -38,7 +40,8 @@ export const AppProvider = ({ children }) => {
           projectResult,
           headerResult,
           socialResult,
-          contactResult
+          contactResult,
+          settingResult,
         ] = await Promise.allSettled([
           axiosInstance.get("/hero"),
           axiosInstance.get("/skills"),
@@ -47,6 +50,7 @@ export const AppProvider = ({ children }) => {
           axiosInstance.get("/headers"),
           axiosInstance.get("/social-data"),
           axiosInstance.get("/contact-details"),
+          axiosInstance.get("/site-settings"),
 
         ]);
 
@@ -105,6 +109,13 @@ export const AppProvider = ({ children }) => {
         } else {
           setContactData(null);
           console.error("Contact fetch error:", contactResult.reason);
+        }
+        if (settingResult.value.data.code === 200) {
+          const { data: contact } = settingResult.value.data;
+          setSiteSettingData(contact);
+        } else {
+          setSiteSettingData(null);
+          console.error("Contact fetch error:", settingResult.reason);
         }
 
 
@@ -183,6 +194,7 @@ export const AppProvider = ({ children }) => {
         aboutData,
         socialData,
         contactData,
+        siteSettingData,
         error,
 
         currentPage,

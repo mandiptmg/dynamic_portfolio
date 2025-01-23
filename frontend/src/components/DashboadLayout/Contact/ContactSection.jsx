@@ -77,8 +77,7 @@ const ContactSection = () => {
     const formPayload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (["firstImage"].includes(key)) {
-        // Handle File objects
+      if (["contactImage"].includes(key)) {
         if (value instanceof File) {
           formPayload.append(key, value);
         }
