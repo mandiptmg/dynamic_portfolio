@@ -130,7 +130,7 @@ const RoleTable = () => {
             ) : (
               <tr>
                 <td colSpan={headings.length + 1} className="py-4 text-center">
-                  No roles found.
+                  Error: {error}
                 </td>
               </tr>
             )}

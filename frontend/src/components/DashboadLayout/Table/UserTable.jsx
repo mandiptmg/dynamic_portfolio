@@ -156,7 +156,7 @@ const UserTable = () => {
             ) : (
               <tr>
                 <td colSpan={headings.length + 1} className="py-4 text-center">
-                  No users found.
+                  Error: {error}
                 </td>
               </tr>
             )}

@@ -22,6 +22,7 @@ const HeaderTable = () => {
     { key: "link", value: " Link" },
   ];
 
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this header?"))
       return;
@@ -141,7 +142,7 @@ const HeaderTable = () => {
             ) : (
               <tr>
                 <td colSpan={headings.length + 1} className="py-4 text-center">
-                  Error: {error.message}
+                  Error: {error}
                 </td>
               </tr>
             )}

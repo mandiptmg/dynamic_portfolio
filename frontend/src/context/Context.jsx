@@ -7,11 +7,14 @@ const AppContext = createContext(null);
 
 // eslint-disable-next-line react/prop-types
 export const AppProvider = ({ children }) => {
+  // State Management
   const [menu, setMenu] = useState(false);
   const [dark, setDark] = useState(false);
-  const [scroll, setScroll] = useState("");
+  const [scrollClass, setScrollClass] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Data State
   const [heroData, setHeroData] = useState(null);
   const [aboutData, setAboutData] = useState(null);
   const [skillData, setSkillData] = useState([]);
@@ -21,107 +24,43 @@ export const AppProvider = ({ children }) => {
   const [contactData, setContactData] = useState(null);
   const [siteSettingData, setSiteSettingData] = useState(null);
 
-
-
-
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
+  const itemsPerPage = 8;
 
+  // Fetch Data on Mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
       try {
-        const [
-          heroResult,
-          skillResult,
-          aboutResult,
-          projectResult,
-          headerResult,
-          socialResult,
-          contactResult,
-          settingResult,
-        ] = await Promise.allSettled([
-          axiosInstance.get("/hero"),
-          axiosInstance.get("/skills"),
-          axiosInstance.get("/about"),
-          axiosInstance.get("/projects"),
-          axiosInstance.get("/headers"),
-          axiosInstance.get("/social-data"),
-          axiosInstance.get("/contact-details"),
-          axiosInstance.get("/site-settings"),
+        const endpoints = [
+          { url: "/hero", setter: setHeroData },
+          { url: "/skills", setter: setSkillData },
+          { url: "/about", setter: setAboutData },
+          { url: "/projects", setter: setProjectData },
+          { url: "/social-data", setter: setSocialData },
+          { url: "/contact-details", setter: setContactData },
+          { url: "/site-settings", setter: setSiteSettingData },
+          { url: "/headers", setter: setHeaderData },
+        ];
 
-        ]);
+        const responses = await Promise.allSettled(
+          endpoints.map((endpoint) => axiosInstance.get(endpoint.url))
+        );
 
-        if (socialResult.value.data.code === 200) {
-          const { data: social } = socialResult.value.data;
-          setSocialData(social);
-        } else {
-          setSocialData(null);
-          console.error("social media fetch error:", socialResult.reason);
-        }
+        responses.forEach((response, index) => {
+          const { value } = response;
+          const { setter } = endpoints[index];
 
-
-        if (headerResult.value.data.code === 200) {
-          const { data: header } = headerResult.value.data;
-          setHeaderData(header);
-        } else {
-          setHeaderData(null);
-          console.error("Header fetch error:", headerResult.reason);
-        }
-
-        if (heroResult.value.data.code === 200) {
-          const { data: hero } = heroResult.value.data;
-          setHeroData(hero);
-        } else {
-          setHeroData(null);
-          console.error("Hero fetch error:", heroResult.reason);
-        }
-
-        if (skillResult.value.data.code === 200) {
-          const { data: skill } = skillResult.value.data;
-          setSkillData(skill);
-        } else {
-          setSkillData([]);
-          console.error("Skills fetch error:", skillResult.reason);
-        }
-
-        if (aboutResult.value.data.code === 200) {
-          const { data: about } = aboutResult.value.data;
-          setAboutData(about);
-        } else {
-          setAboutData(null);
-          console.error("About fetch error:", aboutResult.reason);
-        }
-
-        if (projectResult.value.data.code === 200) {
-          const { data: project } = projectResult.value.data;
-          setProjectData(project);
-        } else {
-          setProjectData(null);
-          console.error("Project fetch error:", projectResult.reason);
-        }
-
-        if (contactResult.value.data.code === 200) {
-          const { data: contact } = contactResult.value.data;
-          setContactData(contact);
-        } else {
-          setContactData(null);
-          console.error("Contact fetch error:", contactResult.reason);
-        }
-        if (settingResult.value.data.code === 200) {
-          const { data: contact } = settingResult.value.data;
-          setSiteSettingData(contact);
-        } else {
-          setSiteSettingData(null);
-          console.error("Contact fetch error:", settingResult.reason);
-        }
-
-
-      } catch (error) {
-        console.error("Unexpected error:", error);
-        setError("An unexpected error occurred");
+          if (value.data.code === 200) {
+            setter(value.data.data || null);
+          } else {
+            setter(null);
+          }
+        });
+      } catch {
+        setError("An unexpected error occurred while fetching data.");
       } finally {
         setLoading(false);
       }
@@ -130,50 +69,52 @@ export const AppProvider = ({ children }) => {
     fetchData();
   }, []);
 
+
   useEffect(() => {
     AOS.init({
-      // Global settings:
-      offset: 200, // offset (in px) from the original trigger point
-      delay: 100, // values from 0 to 3000, with step 50ms
-      duration: 1000, // values from 0 to 3000, with step 50ms
-      easing: "ease", // default easing for AOS animations
+      offset: 200,
+      delay: 100,
+      duration: 1000,
+      easing: "ease",
     });
 
-    const handlerDark = () => {
-      const storedValue = localStorage.getItem("dark-mode");
-      if (storedValue === "true") {
+    // Load and apply dark mode settings
+    const initializeDarkMode = () => {
+      const isDarkMode = localStorage.getItem("dark-mode") === "true";
+      if (isDarkMode) {
         document.documentElement.classList.add("dark");
         setDark(true);
       } else {
+        document.documentElement.classList.remove("dark");
         setDark(false);
       }
     };
 
-    handlerDark();
-
-    const handlerStickey = () => {
-      if (window.scrollY > 50) {
-        setScroll("bg-gray-100 dark:bg-[#222831] shadow-xl");
-      } else {
-        setScroll("");
-      }
+    // Update scroll styles
+    const handleScroll = () => {
+      setScrollClass(
+        window.scrollY > 50 ? "bg-gray-100 dark:bg-[#222831] shadow-xl" : ""
+      );
     };
-    handlerStickey();
 
-    const handlerWidth = () => {
+    // Close menu on wider screens
+    const handleResize = () => {
       if (window.innerWidth > 768) {
         setMenu(false);
       }
     };
 
-    handlerWidth();
+    initializeDarkMode();
+    handleScroll();
+    handleResize();
 
-    window.addEventListener("scroll", handlerStickey);
-    window.addEventListener("resize", handlerWidth);
+    // Event listeners
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", handlerWidth);
-      window.removeEventListener("scroll", handlerStickey);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -184,8 +125,7 @@ export const AppProvider = ({ children }) => {
         setMenu,
         dark,
         setDark,
-        scroll,
-        setScroll,
+        scrollClass,
         loading,
         heroData,
         headerData,
@@ -196,7 +136,6 @@ export const AppProvider = ({ children }) => {
         contactData,
         siteSettingData,
         error,
-
         currentPage,
         setCurrentPage,
         itemsPerPage,
@@ -207,7 +146,7 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
+// Hook for accessing context
 export const useGlobalContext = () => {
   const context = useContext(AppContext);
   if (!context) {

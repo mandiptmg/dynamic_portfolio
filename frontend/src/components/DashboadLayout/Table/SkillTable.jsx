@@ -171,7 +171,7 @@ const SkillTable = () => {
             ) : (
               <tr>
                 <td colSpan={headings.length + 1} className="py-4 text-center">
-                  Error: {error.message}
+                  Error: {error}
                 </td>
               </tr>
             )}
