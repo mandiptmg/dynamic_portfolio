@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -10,7 +11,7 @@ export const AppProvider = ({ children }) => {
   // State Management
   const [menu, setMenu] = useState(false);
   const [dark, setDark] = useState(false);
-  const [scrollClass, setScrollClass] = useState("");
+  const [scroll, setScroll] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -69,7 +70,6 @@ export const AppProvider = ({ children }) => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     AOS.init({
       offset: 200,
@@ -92,7 +92,7 @@ export const AppProvider = ({ children }) => {
 
     // Update scroll styles
     const handleScroll = () => {
-      setScrollClass(
+      setScroll(
         window.scrollY > 50 ? "bg-gray-100 dark:bg-[#222831] shadow-xl" : ""
       );
     };
@@ -125,7 +125,7 @@ export const AppProvider = ({ children }) => {
         setMenu,
         dark,
         setDark,
-        scrollClass,
+        scroll,
         loading,
         heroData,
         headerData,
@@ -146,7 +146,7 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-// Hook for accessing context
+
 export const useGlobalContext = () => {
   const context = useContext(AppContext);
   if (!context) {

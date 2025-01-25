@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { projectData } from "../../data/data";
 import { FaArrowUp } from "react-icons/fa";
+import { useGlobalContext } from "../../context/Context";
 
 const Project = () => {
+  const { projectData } = useGlobalContext();
   return (
     <div className="py-20 w-[90vw] mx-auto">
       <div className="text-center">
@@ -16,29 +17,32 @@ const Project = () => {
         </div>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-3 md:grid-cols-2 ">
-          {projectData.slice(0, 6).map((item) => (
-            <div
-              key={item.id}
-              data-aos="zoom-in-down"
-              data-delay={200 * item.id}
-              onClick={() => window.open(`${item.link}`)}
-              className="w-full group hover:scale-[1.04] duration-700 relative cursor-pointer "
-            >
-              <div className="h-[300px] shadow1 rounded-t-md overflow-hidden w-full">
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  width={470}
-                  height={40}
-                  className="w-full h-[2500px]  translate-y-0  group-hover:-translate-y-[77.5%] transition-all hover:ease-in duration-[4s] cursor-pointer"
-                />
+          {projectData
+            .slice(-6)
+            .reverse()
+            .map((project) => (
+              <div
+                key={project.id}
+                data-aos="zoom-in-down"
+                data-delay={200 * project.id}
+                onClick={() => window.open(`${project.link}`)}
+                className="w-full group hover:scale-[1.04] duration-700 relative cursor-pointer "
+              >
+                <div className="h-[300px] shadow1 rounded-t-md overflow-hidden w-full">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    width={470}
+                    height={40}
+                    className="w-full h-[2500px]  translate-y-0  group-hover:-translate-y-[77.5%] transition-all hover:ease-in duration-[4s] cursor-pointer"
+                  />
+                </div>
+                <h1 className="group-hover:text-white border border-[#00ADB5]/70 shadow-2xl  md:text-xl text-sm text-left capitalize text-black group-hover:bg-[#00ADB5]/70 rounded-lg dark:text-white mt-4 items-center flex justify-between   w-full py-2 px-4 duration-700">
+                  {project.name}
+                  <FaArrowUp className="p-1 rounded-full rotate-45 text-2xl bg-[#00ADB5]/70 text-gray-200 group-hover:bg-white font-thin group-hover:text-black" />
+                </h1>
               </div>
-              <h1 className="group-hover:text-white border border-[#00ADB5]/70 shadow-2xl  md:text-xl text-sm text-left capitalize text-black group-hover:bg-[#00ADB5]/70 rounded-lg dark:text-white mt-4 items-center flex justify-between   w-full py-2 px-4 duration-700">
-                {item.title}
-                <FaArrowUp className="p-1 rounded-full rotate-45 text-2xl bg-[#00ADB5]/70 text-gray-200 group-hover:bg-white font-thin group-hover:text-black" />
-              </h1>
-            </div>
-          ))}
+            ))}
         </div>
         <Link to="/portfolio">
           <button

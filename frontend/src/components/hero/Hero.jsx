@@ -1,9 +1,15 @@
 import { useGlobalContext } from "../../context/Context";
-import hero from "../../assets/hero.png";
-import bgImage from "../../assets/bgImage.jpg";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import Loading from "../loading/Loading";
 const Hero = () => {
-  const { dark } = useGlobalContext();
+  const { dark, heroData } = useGlobalContext();
+
+  if (!heroData) {
+    return <Loading />;
+  }
+
+  const { name, position, image, bgImage, description } = heroData;
+
   return (
     <div
       style={{ backgroundImage: `url(${bgImage})` }}
@@ -14,18 +20,15 @@ const Hero = () => {
           <div className="grid place-items-center">
             <div className="">
               <h5 className="text-base md:text-lg lg:text-xl dark:text-white color font-normal">
-                Hi! I am Mandip, a
+                {name}
               </h5>
               <p className="text-3xl mt-2 capitalize font-bold color1 md:text-3xl lg:text-5xl">
-                Full stack developer
+                {position}
               </p>
-              <p className="text-sm my-6 dark:text-gray-200 text-gray-600">
-                I’m a passionate Full Stack Developer with 1+ years of
-                experience crafting visually stunning and user-friendly
-                websites. I specialize in modern web technologies to build
-                seamless interfaces and robust backends, ensuring both
-                aesthetics and performance.
-              </p>
+              <div
+                className="text-sm my-6 dark:text-gray-200 text-gray-600"
+                dangerouslySetInnerHTML={{ __html: description }}
+              ></div>
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => window.open("https://github.com/mandiptmg")}
@@ -53,7 +56,7 @@ const Hero = () => {
           <div className=" w-full grid mx-auto place-items-center h-full">
             <div data-aos="fade-left" className="relative md:h-[70%]">
               <img
-                src={hero}
+                src={image}
                 alt="logo"
                 className={`${
                   dark ? "grayscale" : "none"

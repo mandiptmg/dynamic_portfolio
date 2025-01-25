@@ -1,8 +1,24 @@
-"use client";
-import { iconData } from "../data/data";
-import contact from "../assets/contact.png";
 import ContactForm from "../components/contactForm/ContactForm";
+import { useGlobalContext } from "../context/Context";
+import * as Icons from "react-icons/fa";
+import Loading from "../components/loading/Loading";
 const ContactPage = () => {
+  const { contactData } = useGlobalContext();
+
+  // Function to render icons dynamically
+  const renderIcon = (iconName) => {
+    const IconComponent = Icons[iconName]; // Get the icon component from react-icons/fa
+    return IconComponent ? <IconComponent /> : null; // Render if it exists
+  };
+
+  if (!contactData) {
+    return <Loading />;
+  }
+
+  const { contactImage, name, position, description, subTitle, socialData } =
+  contactData;
+
+
   return (
     <div>
       <div className="bg-cover bg-center  bg-[url(https://c0.wallpaperflare.com/preview/843/976/970/business-background-illustration-people.jpg)] grid place-items-center text-center ">
@@ -26,7 +42,7 @@ const ContactPage = () => {
             <div className="w-full h-full grid place-items-center p-4 rounded bg-[#eee] dark:bg-gray-700">
               <img
                 data-aos="zoom-in-down"
-                src={contact}
+                src={contactImage}
                 alt="contact"
                 width={400}
                 height={400}
@@ -34,30 +50,27 @@ const ContactPage = () => {
               />
               <div data-aos="zoom-in-down" className="text-left space-y-3 ">
                 <h1 className="text-lg tracking-widest md:text-xl dark:text-white color font-bold">
-                  {" "}
-                  Mandip Tamang
+                  {name}
                 </h1>
                 <h1 className="font-medium text-gray-500 dark:text-gray-200">
-                  {" "}
-                  Full Stack Developer
+                  {position}
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-200">
-                  I’m a passionate full stack developer creating immersive
-                  digital experiences that merge technical skill with design
-                  finesse.
-                </p>
+                <p
+                  className="text-sm text-gray-500 dark:text-gray-200"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                ></p>
                 <h1 className="uppercase color text-base font-light dark:text-white">
-                  find me in
+                  {subTitle}
                 </h1>
                 <div className="flex gap-2 w-full items-center">
-                  {iconData.map((icon) => (
+                  {socialData.map((icon) => (
                     <div data-delay={200 * icon.id} key={icon.id}>
                       <h1
-                        title={icon.title}
+                        title={icon.name}
                         onClick={() => window.open(`${icon.link}`)}
                         className="text-xl cursor-pointer  color1 p-2 bg-white rounded-full"
                       >
-                        {icon.icon && <icon.icon />}
+                        {renderIcon(icon.icon)}
                       </h1>
                     </div>
                   ))}

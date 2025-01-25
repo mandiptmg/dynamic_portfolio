@@ -1,14 +1,22 @@
 import { Link } from "react-router-dom";
-import about from "../assets/about1.jpg";
 import About from "../components/about/About";
 import Experience from "../components/about/Experience";
 import Service from "../components/service/Service";
+import { useGlobalContext } from "../context/Context";
+import Loading from "../components/loading/Loading";
 const AboutPage = () => {
+  const {aboutData} = useGlobalContext();
+
+  if (!aboutData) {
+    return <Loading />;
+  }
+  const {title,subSkillTitle,projectInquiry,inquiryDescription,secondImage } = aboutData
+
   return (
     <div className="overflow-x-hidden">
       <div className="bg-cover bg-center  bg-[url(https://c0.wallpaperflare.com/preview/323/1002/408/man-male-wall-hide.jpg)] grid place-items-center text-center ">
         <h1 className="text-5xl py-20 w-full h-full bg-black/50 font-semibold uppercase text-white">
-          about me
+         {title}
         </h1>
       </div>
       <div className="w-[90vw] mx-auto py-20">
@@ -21,18 +29,17 @@ const AboutPage = () => {
             data-aos="fade-right"
             className="text-3xl md:text-6xl font-medium"
           >
-            Stuff I am good at
+         {subSkillTitle}
           </h1>
           <Service/>
         </div>
         <div className="flex items-center flex-col-reverse md:flex-row gap-10 md:gap-16">
           <div className="space-y-4">
             <h1 data-aos="fade-up" className="text-3xl md:text-6xl font-medium">
-              Interested for a project?
+              {projectInquiry}
             </h1>
             <p data-aos="fade-up" className=" text-lg md:text-xl">
-              Excited about a new front-end project opportunity? Lets
-              collaborate and bring your ideas to life.
+             {inquiryDescription}
             </p>
 
             <Link to="/contact">
@@ -49,7 +56,7 @@ const AboutPage = () => {
           </div>
           <div data-aos="fade-left" className="max-w-2xl mx-auto">
             <img
-              src={about}
+              src={secondImage}
               alt="about"
               width={400}
               height={400}

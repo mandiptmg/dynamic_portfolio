@@ -1,11 +1,14 @@
-
 import logoWhite from "../../assets/logo-white.png";
-import { headerData, iconData } from "../../data/data";
+import { headerData } from "../../data/data";
 import { FaArrowUp } from "react-icons/fa";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useGlobalContext } from "../../context/Context";
+import * as Icons from "react-icons/fa";
 
 const Footer = () => {
+  const { socialData } = useGlobalContext();
+
   useEffect(() => {
     const handleScroll = () => {
       const lookElement = document.querySelector(".look");
@@ -22,6 +25,13 @@ const Footer = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   });
+
+  // Function to render icons dynamically
+  const renderIcon = (iconName) => {
+    const IconComponent = Icons[iconName]; // Get the icon component from react-icons/fa
+    return IconComponent ? <IconComponent /> : null; // Render if it exists
+  };
+
   return (
     <div className="pt-4 bg-black/90  w-full">
       <div className="grid items-center  grid-cols-12">
@@ -40,14 +50,14 @@ const Footer = () => {
         <div className="text-center grid md:place-items-center place-items-start col-span-8 text-gray-400">
           <div className="space-y-4">
             <div className="flex justify-center items-center gap-4">
-              {iconData.map((icon) => (
+              {socialData.map((icon) => (
                 <div key={icon.id}>
                   <Link to={icon.link}>
                     <h1
-                      title={icon.title}
+                      title={icon.name}
                       className="text-sm sm:text-2xl rounded-full text-gray-600 hover:scale-[1.1] duration-700 bg-gray-100 p-2"
                     >
-                      {icon.icon && <icon.icon />}
+                      {renderIcon(icon.icon)}
                     </h1>
                   </Link>
                 </div>
