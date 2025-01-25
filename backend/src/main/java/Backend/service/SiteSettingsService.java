@@ -44,21 +44,21 @@ public class SiteSettingsService {
         }
 
         if (aboutCover != null && !aboutCover.isEmpty()) {
-            imageService.deleteImage(COVER_IMAGE_CATEGORY, existingSettings.getAboutCoverImage());
+            imageService.deleteImage(COVER_IMAGE_CATEGORY, existingSettings.getAboutCover());
             String aboutCoverPath = imageService.saveImage(COVER_IMAGE_CATEGORY, aboutCover);
-            existingSettings.setAboutCoverImage(aboutCoverPath);
+            existingSettings.setAboutCover(aboutCoverPath);
         }
 
         if (portfolioCover != null && !portfolioCover.isEmpty()) {
-            imageService.deleteImage(COVER_IMAGE_CATEGORY, existingSettings.getPortfolioCoverImage());
+            imageService.deleteImage(COVER_IMAGE_CATEGORY, existingSettings.getPortfolioCover());
             String portfolioCoverPath = imageService.saveImage(COVER_IMAGE_CATEGORY, portfolioCover);
-            existingSettings.setPortfolioCoverImage(portfolioCoverPath);
+            existingSettings.setPortfolioCover(portfolioCoverPath);
         }
 
         if (contactCover != null && !contactCover.isEmpty()) {
-            imageService.deleteImage(COVER_IMAGE_CATEGORY, existingSettings.getContactCoverImage());
+            imageService.deleteImage(COVER_IMAGE_CATEGORY, existingSettings.getContactCover());
             String contactCoverPath = imageService.saveImage(COVER_IMAGE_CATEGORY, contactCover);
-            existingSettings.setContactCoverImage(contactCoverPath);
+            existingSettings.setContactCover(contactCoverPath);
         }
 
         existingSettings.setFooter(siteSettings.getFooter());

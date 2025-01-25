@@ -5,10 +5,12 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../context/Context";
 import * as Icons from "react-icons/fa";
+import Loading from "../loading/Loading";
 
 const Footer = () => {
-  const { socialData } = useGlobalContext();
+  const { socialData, siteSettingData } = useGlobalContext();
 
+  
   useEffect(() => {
     const handleScroll = () => {
       const lookElement = document.querySelector(".look");
@@ -25,6 +27,13 @@ const Footer = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   });
+  
+  if(!siteSettingData){
+    return <Loading/>
+  }
+
+  const { footer } = siteSettingData;
+
 
   // Function to render icons dynamically
   const renderIcon = (iconName) => {
@@ -78,10 +87,10 @@ const Footer = () => {
         </div>
       </div>
       <div className="bg-black text-center py-5">
-        <p className="text-white text-xs sm:text-sm">
-          Copyright &copy;2024,Design by{" "}
-          <span className="font-thin">MANDIP TAMANG</span>
-        </p>
+        <p
+          className="text-white text-xs sm:text-sm"
+          dangerouslySetInnerHTML={{ __html: footer }}
+        ></p>
       </div>
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

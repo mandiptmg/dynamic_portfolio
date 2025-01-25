@@ -33,12 +33,12 @@ public class SiteSettings {
 
     @Lob // Large Object
     @Column(nullable = true)
-    private String aboutCoverImage;
+    private String aboutCover;
 
     @Column(nullable = true)
-    private String portfolioCoverImage;
+    private String portfolioCover;
 
     @Column(nullable = true)
-    private String contactCoverImage;
+    private String contactCover;
 
 }
