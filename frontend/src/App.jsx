@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Header from "./components/header/Header";
 import Footer from "./components/header/Footer";
@@ -19,10 +19,20 @@ import HeaderTable from "./components/DashboadLayout/Table/HeaderTable";
 import SocialTable from "./components/DashboadLayout/Table/SocialTable";
 import ContactSection from "./components/DashboadLayout/Contact/ContactSection";
 import SettingSection from "./components/DashboadLayout/Section/SettingSection";
+import { useEffect } from "react";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
   const token = "ffdfbbdfdbfbfdb";
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Enables smooth scrolling
+    });
+  }, [pathname]);
 
   const ProtectedRoute = () => {
     return token ? <Outlet /> : <Navigate to="/login" replace />;
@@ -92,8 +102,6 @@ function App() {
             <Route path="social-media" element={<SocialTable />} />
             <Route path="contact" element={<ContactSection />} />
             <Route path="site-setting" element={<SettingSection />} />
-
-
 
             {/* <Route path="users" element={<UserTable />} /> */}
             {/* <Route path="roles" element={<RoleTable />} /> */}

@@ -16,6 +16,9 @@ public class SiteSettingsDto {
     @ConditionalNotNull(message = "Logo file is required.", conditionField = "id")
     private MultipartFile logo;
 
+    @ConditionalNotNull(message = "Dark Logo file is required.", conditionField = "id")
+    private MultipartFile darkLogo;
+
     @ConditionalNotNull(message = "Favicon file is required.", conditionField = "id")
     private MultipartFile favicon;
 

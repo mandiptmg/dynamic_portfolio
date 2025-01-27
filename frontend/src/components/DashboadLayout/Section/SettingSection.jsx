@@ -19,9 +19,11 @@ const SettingSection = () => {
     aboutCover: siteSettingData?.aboutCover || "",
     favicon: siteSettingData?.favicon || "",
     logo: siteSettingData?.logo || "",
+    darkLogo: siteSettingData?.darkLogo || "",
     contactCover: siteSettingData?.contactCover || "",
     contactURL: "",
     logoURL: "",
+    darkLogoURL:"",
     faviconURL: "",
     portfolioURL: "",
     aboutURL: "",
@@ -74,6 +76,7 @@ const SettingSection = () => {
       if (
         [
           "logo",
+          "darkLogo",
           "favicon",
           "contactCover",
           "aboutCover",
@@ -119,6 +122,7 @@ const SettingSection = () => {
 
   const dropzones = {
     logo: useCreateDropzone("logo"),
+    darkLogo: useCreateDropzone("darkLogo"),
     favicon: useCreateDropzone("favicon"),
     contactCover: useCreateDropzone("contactCover"),
     aboutCover: useCreateDropzone("aboutCover"),
@@ -139,6 +143,7 @@ const SettingSection = () => {
             {/* image upload section  */}
             {[
               "logo",
+              "darkLogo",
               "favicon",
               "contactCover",
               "aboutCover",

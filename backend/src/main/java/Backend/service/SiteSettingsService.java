@@ -26,7 +26,8 @@ public class SiteSettingsService {
         return siteSettingsRepository.findById(1L).orElse(null);
     }
 
-    public SiteSettings saveOrUpdateSiteSettings(SiteSettings siteSettings, MultipartFile logo, MultipartFile favicon,
+    public SiteSettings saveOrUpdateSiteSettings(SiteSettings siteSettings, MultipartFile logo, MultipartFile darkLogo,
+            MultipartFile favicon,
             MultipartFile aboutCover,
             MultipartFile portfolioCover, MultipartFile contactCover) throws IOException {
         SiteSettings existingSettings = siteSettingsRepository.findById(1L).orElse(new SiteSettings());
@@ -35,6 +36,12 @@ public class SiteSettingsService {
             imageService.deleteImage(LOGO_CATEGORY, existingSettings.getLogo());
             String logoPath = imageService.saveImage(LOGO_CATEGORY, logo);
             existingSettings.setLogo(logoPath);
+        }
+
+        if (darkLogo != null && !darkLogo.isEmpty()) {
+            imageService.deleteImage(LOGO_CATEGORY, existingSettings.getDarkLogo());
+            String darkLogoPath = imageService.saveImage(LOGO_CATEGORY, darkLogo);
+            existingSettings.setDarkLogo(darkLogoPath);
         }
 
         if (favicon != null && !favicon.isEmpty()) {

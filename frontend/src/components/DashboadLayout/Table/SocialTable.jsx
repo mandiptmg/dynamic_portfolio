@@ -83,10 +83,10 @@ const SocialTable = () => {
             <span className="text-cyan-500">
               <ChevronRight />
             </span>
-            Headers
+            Social Media 
           </h1>
           <p className="text-gray-600 text-sm">
-            A list of all the Skill in your account including their name, link,
+            A list of all the social media in your account including their name, link,
             and icon.
           </p>
         </div>
@@ -98,7 +98,7 @@ const SocialTable = () => {
             }}
             className="p-2 rounded-md text-sm text-white bg-cyan-500 hover:bg-cyan-600"
           >
-            Add header
+            Add social
           </button>
         </div>
       </div>

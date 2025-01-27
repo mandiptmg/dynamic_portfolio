@@ -39,8 +39,9 @@ public class SiteSettingsController {
         siteSettings.setFooter(siteSettingsDto.getFooter());
 
         return buildResponse("success", HttpStatus.OK,
-                "Hero" + (siteSettings.getId() != null ? " update " : " save ") + "successfully",
+                "Site setting " + (siteSettings.getId() != null ? " update " : " save ") + " successfully",
                 siteSettingsService.saveOrUpdateSiteSettings(siteSettings, siteSettingsDto.getLogo(),
+                        siteSettingsDto.getDarkLogo(),
                         siteSettingsDto.getFavicon(), siteSettingsDto.getAboutCover(),
                         siteSettingsDto.getPortfolioCover(), siteSettingsDto.getContactCover()));
     }

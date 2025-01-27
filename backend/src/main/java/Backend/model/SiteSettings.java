@@ -26,6 +26,9 @@ public class SiteSettings {
     private String logo;
 
     @Column(nullable = true)
+    private String darkLogo;
+
+    @Column(nullable = true)
     private String favicon;
 
     @Column(nullable = true)

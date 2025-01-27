@@ -9,7 +9,7 @@ const About = () => {
     return <Loading />;
   }
 
-  const { title, description, resume,firstImage } = aboutData;
+  const { title, description, resume, firstImage } = aboutData;
 
   return (
     <div className="py-20 w-[90vw]  mx-auto">
@@ -39,10 +39,9 @@ const About = () => {
             <div className="w-16 h-1 bg-[#00ADB5]"></div>
           </div>
 
-          <div
-            className="dark:text-gray-200 text-sm md:text-base text-gray-500"
-            dangerouslySetInnerHTML={{ __html: description }}
-          ></div>
+          <div className="dark:text-gray-200 text-sm md:text-base text-gray-500">
+            <p dangerouslySetInnerHTML={{ __html: description }}></p>
+          </div>
           <div className="flex items-center gap-6">
             <a
               href={resume} // Path to your file in public directory

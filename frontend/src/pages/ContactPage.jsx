@@ -3,7 +3,7 @@ import { useGlobalContext } from "../context/Context";
 import * as Icons from "react-icons/fa";
 import Loading from "../components/loading/Loading";
 const ContactPage = () => {
-  const { contactData } = useGlobalContext();
+  const { contactData, siteSettingData } = useGlobalContext();
 
   // Function to render icons dynamically
   const renderIcon = (iconName) => {
@@ -16,12 +16,19 @@ const ContactPage = () => {
   }
 
   const { contactImage, name, position, description, subTitle, socialData } =
-  contactData;
-
+    contactData;
 
   return (
     <div>
-      <div className="bg-cover bg-center  bg-[url(https://c0.wallpaperflare.com/preview/843/976/970/business-background-illustration-people.jpg)] grid place-items-center text-center ">
+      <div
+        className="bg-cover bg-center  grid place-items-center text-center"
+        style={{
+          backgroundImage: `url(${
+            siteSettingData?.contactCover ||
+            "https://c0.wallpaperflare.com/preview/843/976/970/business-background-illustration-people.jpg"
+          })`,
+        }}
+      >
         <h1 className="text-5xl w-full h-full bg-black/50 py-20 font-semibold uppercase text-white">
           contact me
         </h1>

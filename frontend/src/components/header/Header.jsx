@@ -3,14 +3,12 @@ import { NavLink } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { RiMenu3Fill } from "react-icons/ri";
 
-import logowhite from "../../assets/logo-white.png";
-import logoblack from "../../assets/logo-black.png";
 import { headerData } from "../../data/data";
 import MenuItem from "./MenuItem";
 import { useGlobalContext } from "../../context/Context";
 
 const Header = () => {
-  const { setMenu, menu, dark, setDark, scroll } = useGlobalContext();
+  const { setMenu, menu, dark, setDark, scroll, siteSettingData } = useGlobalContext();
 
   const toggleDarkMode = () => {
     const newDarkMode = !dark;
@@ -44,7 +42,7 @@ const Header = () => {
       <NavLink to="/">
         <div className="flex items-center">
           <img
-            src={dark ? logowhite : logoblack}
+            src={dark ? siteSettingData?.darkLogo : siteSettingData?.logo}
             alt="logo"
             width={90}
             height={90}

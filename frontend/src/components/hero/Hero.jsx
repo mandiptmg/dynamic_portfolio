@@ -1,14 +1,24 @@
 import { useGlobalContext } from "../../context/Context";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import * as Icons from "react-icons/fa";
 import Loading from "../loading/Loading";
 const Hero = () => {
-  const { dark, heroData } = useGlobalContext();
+  const { dark, heroData, socialData } = useGlobalContext();
 
   if (!heroData) {
     return <Loading />;
   }
 
   const { name, position, image, bgImage, description } = heroData;
+
+  const filteredSocials = socialData.filter((social) =>
+    ["GitHub", "LinkedIn"].includes(social.name)
+  );
+
+   // Function to render icons dynamically
+    const renderIcon = (iconName) => {
+      const IconComponent = Icons[iconName]; // Get the icon component from react-icons/fa
+      return IconComponent ? <IconComponent /> : null; // Render if it exists
+    };
 
   return (
     <div
@@ -30,26 +40,22 @@ const Hero = () => {
                 dangerouslySetInnerHTML={{ __html: description }}
               ></div>
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => window.open("https://github.com/mandiptmg")}
-                  className="px-5 py-2 font-medium bg-[#00ADB5] text-[#EEEEEE] w-fit transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center gap-1"
-                >
-                  <FaGithub className="text-xl sm:text-2xl " />{" "}
-                  <span className="text-base sm:text-lg font-semibold">
-                    Github
-                  </span>
-                </button>
-                <button
-                  onClick={() =>
-                    window.open("https://www.linkedin.com/in/mandip-tamang/")
-                  }
-                  className="px-5 py-2 font-medium bg-[#00ADB5] text-[#EEEEEE] w-fit transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center gap-1"
-                >
-                  <FaLinkedin className="text-xl sm:text-2xl " />{" "}
-                  <span className="text-base md:text-lg font-semibold">
-                    Linkedin
-                  </span>
-                </button>
+                {filteredSocials.map((social) => {
+                  return (
+                    <button
+                      key={social.id}
+                      onClick={() => window.open(social.link)}
+                      className="px-5 py-2 font-medium bg-[#00ADB5] text-[#EEEEEE] w-fit transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] flex items-center gap-1"
+                    >
+                      <span className="text-xl sm:text-2xl">
+                        {renderIcon(social.icon)}
+                      </span>
+                      <span className="text-base sm:text-lg font-semibold">
+                        {social.name}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
