@@ -1,78 +1,73 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-// import { BiMessageAltCheck } from 'react-icons/bi'
+import { axiosInstance } from "../../Api/Axios";
 
 const ContactForm = () => {
-  const [user, setUser] = useState({
+  const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    message: "",
+    personalizedMessage: "",
+    attachments: [],
   });
-  let id, value;
-  const handlerChange = (e) => {
-    id = e.target.id;
-    value = e.target.value;
-    setUser({
-      ...user,
-      [id]: value,
-    });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { id, value, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: files ? files : value,
+    }));
   };
 
-  const handlerSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { fullName, email, message } = user;
-    const res = await fetch(
-      "https://getform.io/f/014c7187-b8e7-405c-9ddd-21ac63fe7610",
-      {
-        method: "POST",
+    setLoading(true);
+
+    const { fullName, email, personalizedMessage, attachments } = formData;
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("to", "mandiptamang159@gmail.com"); // Example email
+    formDataToSend.append("subject", "Contact Me"); // Default subject
+    formDataToSend.append("personalizedMessage", personalizedMessage);
+    formDataToSend.append("fullName", fullName);
+    formDataToSend.append("email", email);
+    attachments.forEach((file) => formDataToSend.append("attachments", file));
+
+    try {
+      const response = await axiosInstance.post("/send-email", formDataToSend, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify({
-          fullName,
-          email,
-          message,
-        }),
+      });
+
+      if (response.data.code === 200) {
+        toast.success(response.data.message || "message send successfull", {
+          position: "top-center",
+        });
+        setFormData({
+          fullName: "",
+          email: "",
+          message: "",
+          attachments: [],
+        });
       }
-    );
-
-    // Form validation
-    if (!fullName || !email || !message) {
-      toast.error("Please fill out all fields.");
-      return;
+    } catch (error) {
+      toast.error(error?.response || "An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    // Form submission logic (e.g., API call)
-    // Assuming the form submission is successful
-    toast.success("Message sent successfully!", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-
-    // Reset form fields after successful submission
-    setUser({
-      fullName: "",
-      email: "",
-      message: "",
-    });
   };
 
   return (
     <div className="md:p-20 p-7">
       <form
-        onSubmit={handlerSubmit}
-        data-aos="fade-left"
+        onSubmit={handleSubmit}
         method="POST"
         className="w-full text-left dark:text-black mx-auto"
       >
         <div className="mb-6">
           <label
-            htmlFor="full-name"
+            htmlFor="fullName"
             className="block text-gray-700 dark:text-gray-200 font-semibold"
           >
             Full Name
@@ -82,8 +77,8 @@ const ContactForm = () => {
             id="fullName"
             className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00ADB5] focus:outline-[#00ADB5] focus:ring-[#00ADB5]"
             placeholder="Enter your full name"
-            value={user.fullName}
-            onChange={handlerChange}
+            value={formData.fullName}
+            onChange={handleChange}
             required
           />
         </div>
@@ -99,8 +94,8 @@ const ContactForm = () => {
             id="email"
             className="mt-1 block p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-[#00ADB5] focus:outline-[#00ADB5] focus:ring-[#00ADB5]"
             placeholder="Enter your email address"
-            value={user.email}
-            onChange={handlerChange}
+            value={formData.email}
+            onChange={handleChange}
             required
           />
         </div>
@@ -112,20 +107,36 @@ const ContactForm = () => {
             Message
           </label>
           <textarea
-            id="message"
+            id="personalizedMessage"
             className="mt-1 block w-full focus:outline-[#00ADB5] rounded-md p-2 border-gray-300 shadow-sm focus:border-[#00ADB5] resize-none focus:ring-[#00ADB5]"
             rows={4}
             placeholder="Enter your message"
-            value={user.message}
-            onChange={handlerChange}
+            value={formData.personalizedMessage}
+            onChange={handleChange}
             required
           ></textarea>
         </div>
+        <div className="mb-6">
+          <label
+            htmlFor="attachments"
+            className="block text-gray-700 dark:text-gray-200 font-semibold"
+          >
+            Attachments (Optional)
+          </label>
+          <input
+            type="file"
+            id="attachments"
+            className="mt-1 block w-full"
+            multiple
+            onChange={handleChange}
+          />
+        </div>
         <button
           type="submit"
-          className="w-full bg-[#00ADB5] hover:bg-[rgb(143,195,231)] duration-700 text-white py-2 px-4 rounded-md  focus:outline-[#00ADB5] focus:ring-2 focus:ring-offset-2 focus:ring-[#00ADB5]"
+          className="w-full bg-[#00ADB5] hover:bg-[rgb(143,195,231)] duration-700 text-white py-2 px-4 rounded-md focus:outline-[#00ADB5] focus:ring-2 focus:ring-offset-2 focus:ring-[#00ADB5]"
+          disabled={loading}
         >
-          Send Message
+          {loading ? "send message..." : "Send Message"}
         </button>
       </form>
     </div>

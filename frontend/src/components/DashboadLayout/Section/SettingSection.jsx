@@ -38,7 +38,6 @@ const SettingSection = () => {
     }
   }, [siteSettingData]);
 
-  console.log(formData);
 
   const handleFileDrop = useCallback((acceptedFiles, fieldName) => {
     if (acceptedFiles.length > 0) {
