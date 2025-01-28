@@ -2,7 +2,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { axiosInstance } from "../Api/Axios";
+import { axiosInstance, axiosWithoutAuth } from "../Api/Axios";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AppContext = createContext(null);
 
@@ -14,6 +16,7 @@ export const AppProvider = ({ children }) => {
   const [scroll, setScroll] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Data State
   const [heroData, setHeroData] = useState(null);
@@ -118,9 +121,34 @@ export const AppProvider = ({ children }) => {
     };
   }, []);
 
+    // login
+    const login = async (email, password) => {
+      setLoading(true);
+      try {
+        const response = await axiosWithoutAuth.post("/login", {
+          email,
+          password,
+        });
+        const { accessToken, refreshToken, message } = response.data;
+  
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        navigate("/dashboard");
+        toast.success(message, { position: "top-center" });
+        window.location.reload();
+      } catch (error) {
+        const errorResponse = error.response?.data?.message;
+        toast.error(errorResponse || "Invalid email or password");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+
   return (
     <AppContext.Provider
       value={{
+        login,
         menu,
         setMenu,
         dark,

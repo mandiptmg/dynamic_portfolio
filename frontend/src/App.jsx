@@ -20,27 +20,29 @@ import SocialTable from "./components/DashboadLayout/Table/SocialTable";
 import ContactSection from "./components/DashboadLayout/Contact/ContactSection";
 import SettingSection from "./components/DashboadLayout/Section/SettingSection";
 import { useEffect } from "react";
+import Login from "./Auth/Login";
+import ForgotPassword from "./Auth/Forget-Password/ForgetPassword";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
-  const token = "ffdfbbdfdbfbfdb";
+  const token = "";
 
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Enables smooth scrolling
+      behavior: "smooth", 
     });
   }, [pathname]);
 
   const ProtectedRoute = () => {
-    return token ? <Outlet /> : <Navigate to="/login" replace />;
+    return token ? <Outlet /> : <Navigate to="/auth/login" replace />;
   };
 
-  // const PublicRoute = () => {
-  //   return token ? <Navigate to="/dashboard" replace /> : <Outlet />;
-  // };
+  const PublicRoute = () => {
+    return token ? <Navigate to="/dashboard" replace /> : <Outlet />;
+  };
 
   const DashboardLayout = () => {
     const { menu } = useGlobalContext();
@@ -59,7 +61,7 @@ function App() {
         <div className="w-full">
           <Navbar />
           <div className="p-10">
-            <Outlet /> {/* Render child routes here */}
+            <Outlet /> 
           </div>
         </div>
       </div>
@@ -89,6 +91,12 @@ function App() {
           <Route path="/portfolio" element={<Project />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/*" element={<PublicNotFound />} />
+        </Route>
+
+        <Route element={<PublicRoute />}>
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+
         </Route>
 
         <Route element={<ProtectedRoute />}>

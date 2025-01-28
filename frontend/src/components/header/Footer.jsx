@@ -49,9 +49,7 @@ const Footer = () => {
             {" "}
             <img
               src={logoWhite}
-              width={200}
-              height={200}
-              className="aspect-square inline-flex object-contain"
+              className="aspect-square  inline-flex object-contain"
               alt="log"
             />
           </Link>

@@ -44,11 +44,9 @@ const Header = () => {
           <img
             src={dark ? siteSettingData?.darkLogo : siteSettingData?.logo}
             alt="logo"
-            width={90}
-            height={90}
-            className="aspect-auto object-contain"
+            className="aspect-auto h-12 w-12  object-contain"
           />
-          <h1>
+          <h1 className="ml-2">
             Mandip | <span className="font-semibold color1">Developer</span>
           </h1>
         </div>

@@ -17,7 +17,7 @@ import {
 } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../../assets/logo-black.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Define menu items
 const menuItems = [
@@ -52,8 +52,27 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
-  const [openDropdown, setOpenDropdown] = useState(false); // State for dropdown toggle
-  const location = useLocation(); // Get current location from react-router
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null); 
+  const location = useLocation(); 
+
+  // Handle dropdown toggle
+  const handleDropdownToggle = (index) => {
+    setOpenDropdownIndex(openDropdownIndex === index ? null : index);
+  };
+
+  // Determine if any submenu is active
+  const isSubMenuActive = (subMenu) => {
+    return subMenu.some((subItem) => location.pathname === `/dashboard${subItem.path}`);
+  };
+
+  // Update the dropdown state based on the active route
+  useEffect(() => {
+    // Check if any submenu is active and open the corresponding dropdown
+    const activeDropdownIndex = menuItems.findIndex(
+      (item) => item.isDropdown && isSubMenuActive(item.subMenu)
+    );
+    setOpenDropdownIndex(activeDropdownIndex !== -1 ? activeDropdownIndex : null);
+  }, [location.pathname]);
 
   return (
     <div
@@ -65,7 +84,7 @@ const Sidebar = () => {
         <img
           src={logo}
           alt="logo"
-          className="w-16 scale-150 h-16 object-contain"
+          className="w-16  h-16 object-contain"
         />
       </div>
       <hr />
@@ -87,25 +106,25 @@ const Sidebar = () => {
           }
 
           if (item.isDropdown) {
-            // Dropdown for Auth
+            // Dropdown for Users and Setting
             return (
               <div key={index} className="space-y-2">
                 <button
-                  onClick={() => setOpenDropdown(!openDropdown)}
+                  onClick={() => handleDropdownToggle(index)}
                   className="px-4 py-3 flex items-center justify-between rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
                 >
                   <div className="flex items-center space-x-4">
                     <span className="text-lg">{item.icon}</span>
                     <span className="no-underline">{item.label}</span>
                   </div>
-                  {openDropdown ? (
+                  {openDropdownIndex === index ? (
                     <FaChevronDown className="text-gray-500" />
                   ) : (
                     <FaChevronRight className="text-gray-500" />
                   )}
                 </button>
                 {/* Submenu */}
-                {openDropdown && (
+                {openDropdownIndex === index && (
                   <div className="pl-8 space-y-2">
                     {item.subMenu.map((subItem, subIndex) => (
                       <NavLink
