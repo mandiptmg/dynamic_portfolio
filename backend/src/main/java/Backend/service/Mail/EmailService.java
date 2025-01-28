@@ -22,6 +22,7 @@ public class EmailService {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
+    @SuppressWarnings("null")
     public void sendEmail(
             String to,
             String subject,
@@ -45,11 +46,10 @@ public class EmailService {
         String htmlBody = templateEngine.process("email", context);
         helper.setText(htmlBody, true);
 
-        if (attachments != null && attachments.length > 0) {
+        if (attachments != null) {
             for (MultipartFile file : attachments) {
-                String filename = file.getOriginalFilename();
-                if (filename != null && !filename.isEmpty()) {
-                    helper.addAttachment(filename, file);
+                if (file != null && !file.isEmpty()) {
+                    helper.addAttachment(file.getOriginalFilename(), file);
                 }
             }
         }

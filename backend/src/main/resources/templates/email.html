@@ -1,7 +1,22 @@
-<html>
-<body>
-    <h1>Hello, [[${recipientName}]]!</h1>
-    <p>[[${personalizedMessage}]]</p>
-    <p>Sent by: [[${senderName}]] ([[${senderEmail}]])</p>
-</body>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Personalized Email</title>
+  </head>
+  <body>
+    <p th:text="'Dear ' + ${recipientName} + ','">Dear [Recipient],</p>
+
+    <p>Your Details:</p>
+    <ul>
+      <li th:text="'Name: ' + ${name}">Name: [Name]</li>
+      <li th:text="'Email: ' + ${email}">Email: [Email]</li>
+    </ul>
+
+    <h6>Message:</h6>
+    <p th:text="${personalizedMessage}">[Personalized Message]</p>
+
+    <p>Attached: Your Cover Letter and Photo</p>
+
+    <p>Best regards,</p>
+  </body>
 </html>

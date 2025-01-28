@@ -20,30 +20,28 @@ public class EmailController {
     @PostMapping("/send-email")
     public ResponseEntity<ApiResponse<?>> sendEmail(
             @RequestParam String to,
-            @RequestParam String subject, // Default value for subject
+            @RequestParam String subject,
             @RequestParam String personalizedMessage,
             @RequestParam String fullName,
             @RequestParam String email,
             @RequestParam(required = false) MultipartFile[] attachments) {
         try {
             emailService.sendEmail(to, subject, personalizedMessage, fullName, email, attachments);
-            ApiResponse<?> response = new ApiResponse<>(
-                    "Success",
-                    HttpStatus.OK.value(),
-                    "Email sent successfully",
-                    null,
-                    java.time.LocalDateTime.now().toString());
-
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            "Success",
+                            HttpStatus.OK.value(),
+                            "Email sent successfully",
+                            null,
+                            java.time.LocalDateTime.now().toString()));
         } catch (Exception e) {
-            ApiResponse<?> response = new ApiResponse<>(
-                    "fail",
-                    HttpStatus.BAD_REQUEST.value(),
-                    "failed to send email",
-                    null,
-                    java.time.LocalDateTime.now().toString());
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiResponse<>(
+                            "Failure",
+                            HttpStatus.BAD_REQUEST.value(),
+                            "Failed to send email: " + e.getMessage(),
+                            null,
+                            java.time.LocalDateTime.now().toString()));
         }
     }
 
