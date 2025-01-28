@@ -118,7 +118,7 @@ const PortfolioTable = () => {
                       {heading.key === "image" ? (
                         <img
                           src={person[heading.key]}
-                          alt="Person"
+                          alt={person.name} 
                           className="w-12 h-12 mx-auto object-top object-cover rounded-md"
                         />
                       ) : (

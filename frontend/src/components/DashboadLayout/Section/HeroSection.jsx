@@ -31,6 +31,8 @@ const HeroSection = () => {
     }
   }, [heroData]);
 
+  console.log(heroData?.image)
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

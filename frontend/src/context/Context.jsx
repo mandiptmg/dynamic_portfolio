@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { axiosInstance, axiosWithoutAuth } from "../Api/Axios";
+import {  axiosWithoutAuth, publicAxios } from "../Api/Axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -27,6 +27,9 @@ export const AppProvider = ({ children }) => {
   const [socialData, setSocialData] = useState([]);
   const [contactData, setContactData] = useState(null);
   const [siteSettingData, setSiteSettingData] = useState(null);
+  // const [userData, setUserData] = useState([]);
+  const [roleData,setRoleData] = useState([]);
+
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,17 +43,20 @@ export const AppProvider = ({ children }) => {
       try {
         const endpoints = [
           { url: "/hero", setter: setHeroData },
-          { url: "/skills", setter: setSkillData },
           { url: "/about", setter: setAboutData },
+          { url: "/skills", setter: setSkillData },
           { url: "/projects", setter: setProjectData },
           { url: "/social-data", setter: setSocialData },
           { url: "/contact-details", setter: setContactData },
           { url: "/site-settings", setter: setSiteSettingData },
           { url: "/headers", setter: setHeaderData },
+          // { url: "/users", setter: setUserData },
+          { url: "/roles", setter: setRoleData },
+
         ];
 
         const responses = await Promise.allSettled(
-          endpoints.map((endpoint) => axiosInstance.get(endpoint.url))
+          endpoints.map((endpoint) => publicAxios.get(endpoint.url))
         );
 
         responses.forEach((response, index) => {
@@ -121,6 +127,7 @@ export const AppProvider = ({ children }) => {
     };
   }, []);
 
+
     // login
     const login = async (email, password) => {
       setLoading(true);
@@ -143,11 +150,35 @@ export const AppProvider = ({ children }) => {
         setLoading(false);
       }
     };
+
+      //logout
+  const logout = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (refreshToken) {
+      try {
+        const response = await axiosWithoutAuth.post("/logout", {
+          token: refreshToken,
+        });
+        const { message } = response.data;
+
+        toast.success(message, {
+          position: "top-center",
+        });
+        localStorage.clear();
+        navigate("/auth/login");
+      } catch (error) {
+        toast.error(
+          error.response?.data?.message || "Failed to logout. Please try again."
+        );
+      }
+    }
+  };
   
 
   return (
     <AppContext.Provider
       value={{
+        logout,
         login,
         menu,
         setMenu,
@@ -163,6 +194,8 @@ export const AppProvider = ({ children }) => {
         socialData,
         contactData,
         siteSettingData,
+        // userData,
+        roleData,
         error,
         currentPage,
         setCurrentPage,

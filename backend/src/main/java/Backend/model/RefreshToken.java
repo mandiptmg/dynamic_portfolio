@@ -4,12 +4,14 @@ import java.time.Instant;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "refresh_tokens")
@@ -21,7 +23,7 @@ public class RefreshToken {
     @Column(unique = true)
     private String token;
 
-    private Instant createdDate;
+    private Instant expiryDate;
 
     @OneToOne
     private User user;

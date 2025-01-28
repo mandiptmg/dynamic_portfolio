@@ -25,14 +25,14 @@ import ForgotPassword from "./Auth/Forget-Password/ForgetPassword";
 // import UserTable from "./components/DashboadLayout/Table/UserTable";
 
 function App() {
-  const token = "";
+  const token = localStorage.getItem("token");
 
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", 
+      behavior: "smooth",
     });
   }, [pathname]);
 
@@ -61,7 +61,7 @@ function App() {
         <div className="w-full">
           <Navbar />
           <div className="p-10">
-            <Outlet /> 
+            <Outlet />
           </div>
         </div>
       </div>
@@ -96,7 +96,6 @@ function App() {
         <Route element={<PublicRoute />}>
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-
         </Route>
 
         <Route element={<ProtectedRoute />}>

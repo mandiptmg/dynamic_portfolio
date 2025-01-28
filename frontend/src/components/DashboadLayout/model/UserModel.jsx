@@ -5,10 +5,11 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useGlobalContext } from "../../context/Context";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../../utils/axiosInstance";
+import { axiosInstance } from "../../../Api/Axios";
+import { useGlobalContext } from "../../context/Context";
 
+import { useState } from "react";
 export default function UserModel({
   formData,
   setFormData,
@@ -16,7 +17,8 @@ export default function UserModel({
   isClose,
   activeModel,
 }) {
-  const { setLoading, allRoles, loading } = useGlobalContext();
+  const { roleData } = useGlobalContext();
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     isClose();
@@ -95,7 +97,7 @@ export default function UserModel({
                   as="h3"
                   className="text-base font-semibold text-gray-900"
                 >
-                 { editId ? "Update User Information" : "User Information"}
+                  {editId ? "Update User Information" : "User Information"}
                 </DialogTitle>
                 <form onSubmit={handleSubmit} className="mt-4 px-3 space-y-4">
                   {/* Full Name */}
@@ -157,7 +159,7 @@ export default function UserModel({
                       <option value="" disabled>
                         Select a role
                       </option>
-                      {allRoles.map((role) => (
+                      {roleData.map((role) => (
                         <option key={role.id} value={role.name}>
                           {role.name}
                         </option>
