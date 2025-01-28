@@ -17,7 +17,7 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/send-email")
+    @PostMapping("/public/send-email")
     public ResponseEntity<ApiResponse<?>> sendEmail(
             @RequestParam String to,
             @RequestParam String subject,

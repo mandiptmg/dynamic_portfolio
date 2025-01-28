@@ -20,15 +20,6 @@ public class SiteSettingsController {
     @Autowired
     private SiteSettingsService siteSettingsService;
 
-    // Get all heroes
-    @GetMapping
-    public ResponseEntity<ApiResponse<SiteSettings>> getSiteSettings() {
-        SiteSettings siteSettings = siteSettingsService.getSiteSettings();
-        if (siteSettings == null) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No site settings found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "Site settings retrieved successfully", siteSettings);
-    }
 
     // Save or update SiteSettings
     @PostMapping("/save")

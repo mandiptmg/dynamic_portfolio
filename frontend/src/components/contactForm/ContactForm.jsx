@@ -1,6 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../../Api/Axios";
+import {  publicAxios } from "../../Api/Axios";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -39,7 +39,7 @@ const ContactForm = () => {
     });
 
     try {
-      const response = await axiosInstance.post("/send-email", formDataToSend, {
+      const response = await publicAxios.post("/send-email", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

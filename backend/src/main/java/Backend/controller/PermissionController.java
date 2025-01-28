@@ -1,7 +1,6 @@
 package Backend.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +19,7 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Permission>>> getPermissions() {
-        List<Permission> permissions = permissionService.getAllPermissions();
-        if (permissions.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No permissions found", permissions);
-        }
-        return buildResponse("success", HttpStatus.OK, "Permissions retrieved successfully", permissions);
-
-    }
-
+ 
     @PostMapping("/add-permission")
     public ResponseEntity<ApiResponse<Permission>> addPermission(@Valid @RequestBody Permission permission) {
         Permission newPermission = permissionService.createPermission(permission);
@@ -40,14 +30,7 @@ public class PermissionController {
                 newPermission);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Permission>> getPermissionById(@PathVariable Long id) {
-        Permission permission = permissionService.getPermissionById(id).orElse(null);
-        if (permission == null) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "Permission not found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "Permission retrieved successfully", permission);
-    }
+    
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Permission>> updatePermission(@PathVariable Long id,

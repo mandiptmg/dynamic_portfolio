@@ -1,16 +1,16 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { FaBell, FaUser } from "react-icons/fa";
 import { HiOutlineBars3BottomRight } from "react-icons/hi2";
-// import { useGlobalContext } from "../../context/Context";
 import { Link } from "react-router-dom";
+import { useGlobalContext } from "../../../context/Context";
 const Navbar = () => {
-  // const { menu, setMenu, logout, user } = useGlobalContext();
+  const { logout } = useGlobalContext();
 
   return (
     <nav className="bg-white h-20 grid place-items-center w-full border-b border-gray-300">
       <div className="flex justify-between items-center w-full px-10">
         {/* Menu Button */}
-        <button 
+        <button
         // onClick={() => setMenu(!menu)}
         >
           <HiOutlineBars3BottomRight className=" text-cyan-500 text-2xl" />
@@ -50,7 +50,7 @@ const Navbar = () => {
                   <p className="">Account</p>
                 </Link>
                 <button
-                  // onClick={() => logout()}
+                  onClick={() => logout()}
                   className="rounded-b-md p-2 w-full text-left transition hover:bg-cyan-600"
                 >
                   logout

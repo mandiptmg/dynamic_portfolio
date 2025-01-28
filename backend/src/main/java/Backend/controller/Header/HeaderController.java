@@ -1,7 +1,6 @@
 package Backend.controller.Header;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +19,7 @@ public class HeaderController {
     @Autowired
     private HeaderService headerService;
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Header>>> getAllHeaders() {
-        List<Header> headers = headerService.getAllHeaders();
-        if (headers.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No headers found", headers);
-        }
-        return buildResponse("success", HttpStatus.OK, "Headers retrieved successfully", headers);
-    }
+  
 
     @PostMapping("/add-header")
     public ResponseEntity<ApiResponse<Header>> addHeader(@Valid @RequestBody Header header) {

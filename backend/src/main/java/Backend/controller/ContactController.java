@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,15 +23,7 @@ public class ContactController {
     @Autowired
     private ContactDetailsService contactDetailsService;
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<ContactDetails>> getContactDetails() {
-        ContactDetails ContactDetails = contactDetailsService.getContactDetails();
-        if (ContactDetails == null) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No Contact Details found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "Contact Details retrieved successfully",
-                ContactDetails);
-    }
+
 
     @PostMapping("/save")
     public ResponseEntity<ApiResponse<ContactDetails>> createContactDetails(

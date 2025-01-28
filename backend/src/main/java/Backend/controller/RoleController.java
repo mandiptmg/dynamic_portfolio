@@ -1,7 +1,6 @@
 package Backend.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Role>>> getAllRoles() {
-        List<Role> roles = roleService.getAllRoles();
-        if (roles.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No roles found", roles);
-        }
-        return buildResponse("success", HttpStatus.OK, "Roles retrieved successfully", roles);
-    }
+ 
 
     @PostMapping("/add-role")
     public ResponseEntity<ApiResponse<Role>> createRole(@Valid @RequestBody Role role) {

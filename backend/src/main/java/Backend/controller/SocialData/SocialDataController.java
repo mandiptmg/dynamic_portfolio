@@ -1,7 +1,6 @@
 package Backend.controller.SocialData;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +20,12 @@ public class SocialDataController {
     @Autowired
     private SocialDataService socialDataService;
 
-    // Get all social data
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<SocialData>>> getAllSocialDatas() {
-        List<SocialData> socialDataList = socialDataService.getAllSocialData();
-        if (socialDataList.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No Social Data found", socialDataList);
-        }
-        return buildResponse("success", HttpStatus.OK, "Social Data retrieved successfully", socialDataList);
-    }
-
     // Add new social data
     @PostMapping("/add-data")
     public ResponseEntity<ApiResponse<SocialData>> addSocialData(@Valid @RequestBody SocialData socialData) {
         SocialData newSocialData = socialDataService.createSocialData(socialData);
         return buildResponse("success", HttpStatus.CREATED, newSocialData.getName() + " created successfully",
                 newSocialData);
-    }
-
-    // Get social data by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<SocialData>> getSocialDataById(@PathVariable("id") Long id) {
-        Optional<SocialData> socialDataOptional = socialDataService.getSocialDataById(id);
-        if (!socialDataOptional.isPresent()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "Social Data not found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "Social Data retrieved successfully", socialDataOptional.get());
     }
 
     // Update social data by ID

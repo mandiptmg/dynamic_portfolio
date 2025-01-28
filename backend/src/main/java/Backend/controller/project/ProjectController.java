@@ -2,7 +2,6 @@ package Backend.controller.project;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Project>>> getAllProjects() {
-        List<Project> Projects = projectService.getAllProjects();
-        if (Projects.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No Projects found", Projects);
-        }
-        return buildResponse("success", HttpStatus.OK, "Projects retrieved successfully", Projects);
-    }
+  
 
     @PostMapping("/add-project")
     public ResponseEntity<ApiResponse<Project>> addProject(@ModelAttribute @Valid ProjectRequestDTO projectRequest) {
@@ -57,14 +49,7 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Project>> getProjectById(@PathVariable("id") Long id) {
-        Optional<Project> ProjectOptional = projectService.getProjectById(id);
-        if (!ProjectOptional.isPresent()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "Project not found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "Project retrieved successfully", ProjectOptional.get());
-    }
+  
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Project>> updateProject(

@@ -10,7 +10,6 @@ import Loading from "../loading/Loading";
 const Footer = () => {
   const { socialData, siteSettingData } = useGlobalContext();
 
-  
   useEffect(() => {
     const handleScroll = () => {
       const lookElement = document.querySelector(".look");
@@ -27,13 +26,12 @@ const Footer = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   });
-  
-  if(!siteSettingData){
-    return <Loading/>
+
+  if (!siteSettingData) {
+    return <Loading />;
   }
 
   const { footer } = siteSettingData;
-
 
   // Function to render icons dynamically
   const renderIcon = (iconName) => {
@@ -49,7 +47,7 @@ const Footer = () => {
             {" "}
             <img
               src={logoWhite}
-              className="aspect-square  inline-flex object-contain"
+              className=" h-28 w-28 inline-flex object-contain"
               alt="log"
             />
           </Link>

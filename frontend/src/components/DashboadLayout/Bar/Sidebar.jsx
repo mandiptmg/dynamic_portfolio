@@ -18,7 +18,7 @@ import {
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../../assets/logo-black.png";
 import { useState, useEffect } from "react";
-
+import { useGlobalContext } from "../../../context/Context";
 // Define menu items
 const menuItems = [
   { icon: <FaHome />, label: "Dashboard", path: "" },
@@ -52,8 +52,9 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
-  const [openDropdownIndex, setOpenDropdownIndex] = useState(null); 
-  const location = useLocation(); 
+  const { logout } = useGlobalContext();
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+  const location = useLocation();
 
   // Handle dropdown toggle
   const handleDropdownToggle = (index) => {
@@ -62,7 +63,9 @@ const Sidebar = () => {
 
   // Determine if any submenu is active
   const isSubMenuActive = (subMenu) => {
-    return subMenu.some((subItem) => location.pathname === `/dashboard${subItem.path}`);
+    return subMenu.some(
+      (subItem) => location.pathname === `/dashboard${subItem.path}`
+    );
   };
 
   // Update the dropdown state based on the active route
@@ -71,7 +74,9 @@ const Sidebar = () => {
     const activeDropdownIndex = menuItems.findIndex(
       (item) => item.isDropdown && isSubMenuActive(item.subMenu)
     );
-    setOpenDropdownIndex(activeDropdownIndex !== -1 ? activeDropdownIndex : null);
+    setOpenDropdownIndex(
+      activeDropdownIndex !== -1 ? activeDropdownIndex : null
+    );
   }, [location.pathname]);
 
   return (
@@ -81,11 +86,7 @@ const Sidebar = () => {
     >
       {/* Logo */}
       <div className="mx-auto h-20 grid place-items-center">
-        <img
-          src={logo}
-          alt="logo"
-          className="w-16  h-16 object-contain"
-        />
+        <img src={logo} alt="logo" className="w-16  h-16 object-contain" />
       </div>
       <hr />
 
@@ -97,6 +98,7 @@ const Sidebar = () => {
             return (
               <button
                 key={index}
+                onClick={logout}
                 className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 hover:text-cyan-600 w-full text-left"
               >
                 <span className="text-lg">{item.icon}</span>

@@ -19,19 +19,8 @@ public class HeroController {
     @Autowired
     private HeroService heroService;
 
-    // Get all heroes
-    @GetMapping
-    public ResponseEntity<ApiResponse<Hero>> getAllHero() {
-        Hero hero = heroService.getHero();
-        if (hero == null) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No hero details found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "Hero Details retrieved successfully", hero);
-    }
-
     // Save or update hero
     @PostMapping("/save")
-
     public ResponseEntity<ApiResponse<Hero>> saveOrUpdateHero(@ModelAttribute @Valid HeroDto heroDto) {
         Hero hero = new Hero();
         hero.setId(heroDto.getId());

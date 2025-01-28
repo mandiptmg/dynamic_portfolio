@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,15 +22,6 @@ public class AboutController {
 
     @Autowired
     private AboutService aboutService;
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<About>> getAbout() {
-        About about = aboutService.getAbout();
-        if (about == null) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No about found", null);
-        }
-        return buildResponse("success", HttpStatus.OK, "About retrieved successfully", about);
-    }
 
     @PostMapping("/save")
     public ResponseEntity<ApiResponse<About>> createAbout(@ModelAttribute @Valid AboutDTO aboutDTO) {
