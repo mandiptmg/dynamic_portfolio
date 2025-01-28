@@ -45,19 +45,17 @@ const ContactForm = () => {
         },
       });
 
-      toast.success(response.data.message || "Message sent successfully!", {
-        position: "top-center",
-      });
-      setFormData({
-        to: "mandiptamang159@gmail.com",
-        subject: "Contact Me",
-        fullName: "",
-        email: "",
-        personalizedMessage: "",
-        attachments: [],
-      });
-      // Reset file input
-      document.getElementByname("attachments").value = "";
+        toast.success(response.data.message || "Message sent successfully!", {
+          position: "top-center",
+        });
+        setFormData({
+          to: "mandiptamang159@gmail.com",
+          subject: "Contact Me",
+          fullName: "",
+          email: "",
+          personalizedMessage: "",
+          attachments: [],
+        });     
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
