@@ -45,17 +45,17 @@ const ContactForm = () => {
         },
       });
 
-        toast.success(response.data.message || "Message sent successfully!", {
-          position: "top-center",
-        });
-        setFormData({
-          to: "mandiptamang159@gmail.com",
-          subject: "Contact Me",
-          fullName: "",
-          email: "",
-          personalizedMessage: "",
-          attachments: [],
-        });     
+      toast.success(response.data.message || "Message sent successfully!", {
+        position: "top-center",
+      });
+      setFormData({
+        to: "mandiptamang159@gmail.com",
+        subject: "Contact Me",
+        fullName: "",
+        email: "",
+        personalizedMessage: "",
+        attachments: [],
+      });
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
@@ -133,7 +133,7 @@ const ContactForm = () => {
           <input
             type="file"
             name="attachments"
-            className="mt-1 block w-full"
+            className="mt-1 block p-2 w-full bg-white rounded-md border-gray-300 shadow-sm focus:border-[#00ADB5] focus:outline-[#00ADB5] focus:ring-[#00ADB5]"
             multiple
             onChange={handleFileChange}
           />
