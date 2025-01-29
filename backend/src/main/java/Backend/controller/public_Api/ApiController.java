@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Backend.dto.UserDTO;
 import Backend.model.ApiResponse;
 import Backend.model.ContactDetails;
 import Backend.model.Permission;
@@ -27,6 +28,7 @@ import Backend.service.ContactDetailsService;
 import Backend.service.PermissionService;
 import Backend.service.RoleService;
 import Backend.service.SiteSettingsService;
+import Backend.service.UserService;
 import Backend.service.About.AboutService;
 import Backend.service.Header.HeaderService;
 import Backend.service.Hero.HeroService;
@@ -38,9 +40,8 @@ import Backend.service.socialData.SocialDataService;
 @RequestMapping("/public")
 public class ApiController {
 
-     @Autowired
+    @Autowired
     private PermissionService permissionService;
-
 
     @Autowired
     private HeroService heroService;
@@ -68,6 +69,9 @@ public class ApiController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/hero")
     public ResponseEntity<ApiResponse<Hero>> getAllHero() {
@@ -162,7 +166,7 @@ public class ApiController {
                 ContactDetails);
     }
 
-       @GetMapping("/permissions")
+    @GetMapping("/permissions")
     public ResponseEntity<ApiResponse<List<Permission>>> getPermissions() {
         List<Permission> permissions = permissionService.getAllPermissions();
         if (permissions.isEmpty()) {
@@ -181,11 +185,11 @@ public class ApiController {
         return buildResponse("success", HttpStatus.OK, "Permission retrieved successfully", permission);
     }
 
-       @GetMapping("/roles")
+    @GetMapping("/roles")
     public ResponseEntity<ApiResponse<List<Role>>> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
         if (roles.isEmpty()) {
-            return buildResponse("error", HttpStatus.NOT_FOUND, "No roles found", roles);
+            return buildResponse("error", HttpStatus.NOT_FOUND, "No roles found", null);
         }
         return buildResponse("success", HttpStatus.OK, "Roles retrieved successfully", roles);
     }
@@ -200,7 +204,7 @@ public class ApiController {
 
     }
 
-        // Get all heroes
+    // Get all heroes
     @GetMapping("/site-settings")
     public ResponseEntity<ApiResponse<SiteSettings>> getSiteSettings() {
         SiteSettings siteSettings = siteSettingsService.getSiteSettings();
@@ -210,6 +214,15 @@ public class ApiController {
         return buildResponse("success", HttpStatus.OK, "Site settings retrieved successfully", siteSettings);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<ApiResponse<List<UserDTO>>> getUsers() {
+        List<UserDTO> users = userService.getAllUsers();
+
+        if (users.isEmpty()) {
+            return buildResponse("error", HttpStatus.NOT_FOUND, "No roles found", null);
+        }
+        return buildResponse("success", HttpStatus.OK, "Roles retrieved successfully", users);
+    }
 
     // Helper method to create response
     private <T> ResponseEntity<ApiResponse<T>> buildResponse(String status, HttpStatus statusCode, String message,

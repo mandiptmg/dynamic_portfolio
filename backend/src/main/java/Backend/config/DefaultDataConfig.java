@@ -20,7 +20,6 @@ public class DefaultDataConfig {
     private static final String USER_EMAIL = "mandiptmang158@gmail.com";
     private static final String DEFAULT_PASSWORD = "As1@mandip";
 
-  
     @Bean
     public CommandLineRunner loadDefaultData(
             PermissionRepository permissionRepository,
@@ -46,7 +45,7 @@ public class DefaultDataConfig {
                     "Mandip Tamang",
                     ADMIN_EMAIL,
                     DEFAULT_PASSWORD,
-                    Set.of(adminRole),
+                    adminRole,
                     userRepository,
                     passwordEncoder);
 
@@ -54,7 +53,7 @@ public class DefaultDataConfig {
                     "Mandip Theeng",
                     USER_EMAIL,
                     DEFAULT_PASSWORD,
-                    Set.of(userRole),
+                    userRole,
                     userRepository,
                     passwordEncoder);
 
@@ -70,19 +69,22 @@ public class DefaultDataConfig {
     }
 
     private Role getOrCreateRole(String roleName, Set<Permission> permissions, RoleRepository repository) {
-        return repository.findByName(roleName).orElseGet(() -> {
-            Role role = new Role();
-            role.setName(roleName);
-            role.setPermissions(permissions);
-            return repository.save(role);
-        });
+        Role roleExist = repository.findByName(roleName);
+        if (roleExist != null) {
+            throw new RuntimeException("Role '" + roleName + "' already exist.");
+
+        }
+        Role role = new Role();
+        role.setName(roleName);
+        role.setPermissions(permissions);
+        return repository.save(role);
     }
 
     private void createDefaultUser(
             String name,
             String email,
             String password,
-            Set<Role> roles,
+            Role roles,
             UserRepository userRepository,
             PasswordEncoder passwordEncoder) {
         userRepository.findByEmail(email).orElseGet(() -> {
@@ -90,7 +92,7 @@ public class DefaultDataConfig {
             user.setName(name);
             user.setEmail(email);
             user.setPassword(passwordEncoder.encode(password));
-            user.setRoles(roles);
+            user.setRole(roles);
             return userRepository.save(user);
         });
     }
