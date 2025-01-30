@@ -1,7 +1,6 @@
 package Backend.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -10,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import Backend.dto.UserApiDTO;
 import Backend.dto.UserDTO;
 import Backend.model.Role;
 import Backend.model.User;
@@ -30,19 +30,22 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
-    public List<UserDTO> getAllUsers() {
+    public List<UserApiDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
+                .map(user -> modelMapper.map(user, UserApiDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public User createUser(UserDTO userDTO) {
+    public UserApiDTO getUserById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return (user != null) ? modelMapper.map(user, UserApiDTO.class) : null;
+    }
 
-        Optional<User> existUserOptional = userRepository.findByEmail(userDTO.getEmail());
+    public UserDTO createUser(UserDTO userDTO) {
 
-        if (existUserOptional.isPresent()) {
-            throw new RuntimeException("User email already exists");
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new RuntimeException("The provided email is already in use.");
         }
 
         // Map DTO to User entity
@@ -59,7 +62,9 @@ public class UserService {
 
         user.setRole(role);
 
-        return userRepository.save(user);
+        // Save and return UserDTO
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserDTO.class);
 
     }
 

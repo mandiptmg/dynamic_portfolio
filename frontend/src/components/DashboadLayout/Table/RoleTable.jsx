@@ -1,18 +1,11 @@
-import { useGlobalContext } from "../../context/Context";
 import { ChevronRight, ClipboardPen, Trash2 } from "lucide-react";
-import { axiosInstance } from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
-import RoleModel from "../model/RoleModel";
-import { useState } from "react";
+import { useGlobalContext } from "../../../context/Context";
+import { axiosInstance } from "../../../Api/Axios";
+import { Link } from "react-router-dom";
 
 const RoleTable = () => {
-  const { allRoles, error } = useGlobalContext();
-
-  const [formData, setFormData] = useState({
-    name: "",
-  });
-  const [editId, setEditId] = useState(null);
-  const [activeModel, setActiveModel] = useState(false);
+  const { roleData, error } = useGlobalContext();
 
   const headings = [{ key: "name", value: "Role Name" }];
 
@@ -33,15 +26,6 @@ const RoleTable = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const handleEdit = (role) => {
-    setFormData({
-      name: role.name,
-    });
-    setEditId(role.id);
-
-    setActiveModel(true);
-  };
-
   // Table Header Component
   const TableHeader = () => {
     return (
@@ -61,16 +45,6 @@ const RoleTable = () => {
 
   return (
     <main>
-      {activeModel && (
-        <RoleModel
-          isClose={() => setActiveModel(false)}
-          activeModel
-          formData={formData}
-          setFormData={setFormData}
-          editId={editId}
-        />
-      )}
-
       <div className="flex items-start justify-between mb-6">
         <div className="space-y-3">
           <h1 className="text-lg capitalize font-semibold flex items-center gap-1">
@@ -83,15 +57,8 @@ const RoleTable = () => {
             A list of all the roles in your account including their name.
           </p>
         </div>
-        <button
-          onClick={() => {
-            setActiveModel(true);
-            setFormData({ name: "" });
-            setEditId(null);
-          }}
-          className="p-2 rounded-md text-sm text-white bg-cyan-500 hover:bg-cyan-600"
-        >
-          Add role
+        <button className="p-2 rounded-md text-sm text-white bg-cyan-500 hover:bg-cyan-600">
+          <Link to="/dashboard/roles/create-role">Add role</Link>
         </button>
       </div>
 
@@ -99,8 +66,8 @@ const RoleTable = () => {
         <table className="min-w-full table-auto">
           <TableHeader />
           <tbody>
-            {allRoles.length > 0 ? (
-              allRoles.map((role, index) => (
+            {roleData.length > 0 ? (
+              roleData.map((role, index) => (
                 <tr key={role.id} className="border-t hover:bg-gray-50">
                   <td className="py-3 px-6 text-center">{index + 1}</td>
                   {headings.map((heading) => (
@@ -110,11 +77,12 @@ const RoleTable = () => {
                   ))}
                   <td className="py-3 px-6 flex items-center justify-center gap-3">
                     <button
-                      onClick={() => handleEdit(role)}
                       title="Edit"
                       className="text-blue-500 hover:text-blue-700"
                     >
-                      <ClipboardPen />
+                      <Link to={`/dashboard/roles/edit/${role.id}`}>
+                        <ClipboardPen />
+                      </Link>
                     </button>
 
                     <button

@@ -7,9 +7,9 @@ import {
 } from "@headlessui/react";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../Api/Axios";
-import { useGlobalContext } from "../../context/Context";
 
 import { useState } from "react";
+import { useGlobalContext } from "../../../context/Context";
 export default function UserModel({
   formData,
   setFormData,

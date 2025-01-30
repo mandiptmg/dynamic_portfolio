@@ -17,7 +17,6 @@ import java.util.Set;
 public class DefaultDataConfig {
 
     private static final String ADMIN_EMAIL = "mandiptamang159@gmail.com";
-    private static final String USER_EMAIL = "mandiptmang158@gmail.com";
     private static final String DEFAULT_PASSWORD = "As1@mandip";
 
     @Bean
@@ -38,7 +37,6 @@ public class DefaultDataConfig {
 
             // Create default roles
             Role adminRole = getOrCreateRole("ADMIN", allPermissions, roleRepository);
-            Role userRole = getOrCreateRole("USER", Set.of(readUser), roleRepository);
 
             // Create default users
             createDefaultUser(
@@ -46,14 +44,6 @@ public class DefaultDataConfig {
                     ADMIN_EMAIL,
                     DEFAULT_PASSWORD,
                     adminRole,
-                    userRepository,
-                    passwordEncoder);
-
-            createDefaultUser(
-                    "Mandip Theeng",
-                    USER_EMAIL,
-                    DEFAULT_PASSWORD,
-                    userRole,
                     userRepository,
                     passwordEncoder);
 
@@ -70,9 +60,9 @@ public class DefaultDataConfig {
 
     private Role getOrCreateRole(String roleName, Set<Permission> permissions, RoleRepository repository) {
         Role roleExist = repository.findByName(roleName);
-        if (roleExist != null) {
-            throw new RuntimeException("Role '" + roleName + "' already exist.");
 
+        if (roleExist != null) {
+            return roleExist; // Return the existing role, no need to create a new one
         }
         Role role = new Role();
         role.setName(roleName);

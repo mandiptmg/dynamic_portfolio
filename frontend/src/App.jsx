@@ -22,7 +22,10 @@ import SettingSection from "./components/DashboadLayout/Section/SettingSection";
 import { useEffect } from "react";
 import Login from "./Auth/Login";
 import ForgotPassword from "./Auth/Forget-Password/ForgetPassword";
-// import UserTable from "./components/DashboadLayout/Table/UserTable";
+import UserTable from "./components/DashboadLayout/Table/UserTable";
+import RoleTable from "./components/DashboadLayout/Table/RoleTable";
+import EditRole from "./pages/role/EditRole";
+import CreateRole from "./pages/role/CreateRole";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -110,8 +113,10 @@ function App() {
             <Route path="contact" element={<ContactSection />} />
             <Route path="site-setting" element={<SettingSection />} />
 
-            {/* <Route path="users" element={<UserTable />} /> */}
-            {/* <Route path="roles" element={<RoleTable />} /> */}
+            <Route path="users" element={<UserTable />} />
+            <Route path="roles" element={<RoleTable />} />
+            <Route path="roles/create-role" element={<CreateRole />} />
+            <Route path="roles/edit/:id" element={<EditRole />} />
           </Route>
           <Route path="/dashboard/*" element={<DashboardNotFound />} />
         </Route>

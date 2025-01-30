@@ -23,17 +23,20 @@ export const AppProvider = ({ children }) => {
   const [aboutData, setAboutData] = useState(null);
   const [skillData, setSkillData] = useState([]);
   const [projectData, setProjectData] = useState([]);
-  const [headerData, setHeaderData] = useState([]);
+  // const [headerData, setHeaderData] = useState([]);
   const [socialData, setSocialData] = useState([]);
   const [contactData, setContactData] = useState(null);
   const [siteSettingData, setSiteSettingData] = useState(null);
-  // const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [roleData,setRoleData] = useState([]);
+  const [permissionData,setPermissionData] = useState([]);
+
 
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
 
   // Fetch Data on Mount
   useEffect(() => {
@@ -49,9 +52,11 @@ export const AppProvider = ({ children }) => {
           { url: "/social-data", setter: setSocialData },
           { url: "/contact-details", setter: setContactData },
           { url: "/site-settings", setter: setSiteSettingData },
-          { url: "/headers", setter: setHeaderData },
-          // { url: "/users", setter: setUserData },
+          // { url: "/headers", setter: setHeaderData },
+          { url: "/users", setter: setUserData },
           { url: "/roles", setter: setRoleData },
+          { url: "/permissions", setter: setPermissionData },
+
 
         ];
 
@@ -173,8 +178,9 @@ export const AppProvider = ({ children }) => {
       }
     }
   };
-  
 
+
+  
   return (
     <AppContext.Provider
       value={{
@@ -187,15 +193,16 @@ export const AppProvider = ({ children }) => {
         scroll,
         loading,
         heroData,
-        headerData,
+        // headerData,
         skillData,
         projectData,
         aboutData,
         socialData,
         contactData,
         siteSettingData,
-        // userData,
+        userData,
         roleData,
+        permissionData,
         error,
         currentPage,
         setCurrentPage,

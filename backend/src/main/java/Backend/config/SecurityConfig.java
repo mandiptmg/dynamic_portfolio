@@ -48,7 +48,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         // .requestMatchers("/user/**").hasAnyAuthority("READ_USER", "WRITE_USER")
-                        .requestMatchers("/auth/**","/uploads/**","/public/**").permitAll()
+                        // .requestMatchers("/auth/**","/uploads/**","/public/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/auth/me").authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

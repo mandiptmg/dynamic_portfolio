@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import Backend.dto.UserDTO;
+import Backend.dto.UserApiDTO;
 import Backend.model.ApiResponse;
 import Backend.model.ContactDetails;
 import Backend.model.Permission;
@@ -215,13 +215,25 @@ public class ApiController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ApiResponse<List<UserDTO>>> getUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+    public ResponseEntity<ApiResponse<List<UserApiDTO>>> getUsers() {
+        List<UserApiDTO> users = userService.getAllUsers();
 
         if (users.isEmpty()) {
             return buildResponse("error", HttpStatus.NOT_FOUND, "No roles found", null);
         }
         return buildResponse("success", HttpStatus.OK, "Roles retrieved successfully", users);
+    }
+
+    // Get user by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserApiDTO>> getUserById(@PathVariable Long id) {
+        UserApiDTO userDTO = userService.getUserById(id);
+
+        if (userDTO != null) {
+            return buildResponse("success", HttpStatus.OK, "User found successfully", userDTO);
+        } else {
+            return buildResponse("error", HttpStatus.NOT_FOUND, "User not found", null);
+        }
     }
 
     // Helper method to create response
