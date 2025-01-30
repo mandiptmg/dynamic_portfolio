@@ -47,7 +47,7 @@ const AboutPage = () => {
           </h1>
           <Service />
         </div>
-        <div className="flex items-center flex-col-reverse md:flex-row gap-10 md:gap-16">
+        <div className="flex items-center flex-col-reverse lg:flex-row gap-10 lg:gap-16">
           <div className="space-y-4">
             <h1 data-aos="fade-up" className="text-3xl md:text-6xl font-medium">
               {projectInquiry}

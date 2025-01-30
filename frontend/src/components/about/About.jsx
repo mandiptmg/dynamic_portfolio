@@ -13,7 +13,7 @@ const About = () => {
 
   return (
     <div className="py-20 w-[90vw]  mx-auto">
-      <div className="md:grid grid-cols-2 flex gap-8 md:gap-0 flex-col md:flex-row justify-between items-center">
+      <div className="lg:grid grid-cols-2 flex gap-8 lg:gap-0 flex-col lg:flex-row justify-between items-center">
         <div className="grid place-items-center">
           <div className="relative">
             <div
@@ -40,7 +40,9 @@ const About = () => {
           </div>
 
           <div className="dark:text-gray-200 text-sm md:text-base text-gray-500">
-            <p dangerouslySetInnerHTML={{ __html: description }}></p>
+            <p
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></p>
           </div>
           <div className="flex items-center gap-6">
             <a

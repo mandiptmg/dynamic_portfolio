@@ -26,17 +26,17 @@ const Hero = () => {
       className="bg-no-repeat pt-20  min-h-[89vh] bg-cover bg-blend-overlay    dark:bg-black/50"
     >
       <div className={`w-[90vw]  mx-auto `}>
-        <div data-aos="fade-up" className="grid  md:grid-cols-2">
-          <div className="grid place-items-center">
+        <div data-aos="fade-up" className="lg:grid grid-cols-2 flex flex-col-reverse gap-7 ">
+          <div className="grid place-items-center py-7">
             <div className="">
               <h5 className="text-base md:text-lg lg:text-xl dark:text-white color font-normal">
                 {name}
               </h5>
-              <p className="text-3xl mt-2 capitalize font-bold color1 md:text-3xl lg:text-5xl">
+              <p className="text-2xl mt-2 capitalize font-bold color1 md:text-3xl lg:text-5xl">
                 {position}
               </p>
               <div
-                className="text-sm my-6 dark:text-gray-200 text-gray-600"
+                className="text-base my-6 dark:text-gray-200 text-gray-700"
                 dangerouslySetInnerHTML={{ __html: description }}
               ></div>
               <div className="flex items-center gap-4">

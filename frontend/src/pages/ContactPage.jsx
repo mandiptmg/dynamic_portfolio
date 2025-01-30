@@ -44,7 +44,7 @@ const ContactPage = () => {
           </h1>{" "}
           <div
             data-aos="fade-right"
-            className="mt-20 grid gap-4 md:grid-cols-3"
+            className="mt-20 grid gap-4 lg:grid-cols-3"
           >
             <div className="w-full h-full grid place-items-center p-4 rounded bg-[#eee] dark:bg-gray-700">
               <img
