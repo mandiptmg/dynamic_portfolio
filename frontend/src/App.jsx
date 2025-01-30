@@ -26,6 +26,7 @@ import UserTable from "./components/DashboadLayout/Table/UserTable";
 import RoleTable from "./components/DashboadLayout/Table/RoleTable";
 import EditRole from "./pages/role/EditRole";
 import CreateRole from "./pages/role/CreateRole";
+import PermissionTable from "./components/DashboadLayout/Table/PermissionTable";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -117,6 +118,8 @@ function App() {
             <Route path="roles" element={<RoleTable />} />
             <Route path="roles/create-role" element={<CreateRole />} />
             <Route path="roles/edit/:id" element={<EditRole />} />
+            <Route path="permissions" element={<PermissionTable />} />
+
           </Route>
           <Route path="/dashboard/*" element={<DashboardNotFound />} />
         </Route>
