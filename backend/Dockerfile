@@ -1,0 +1,14 @@
+# Use the official OpenJDK 21 image
+FROM openjdk:21-jdk-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the build files
+COPY target/backend.jar backend.jar
+
+# Expose the application port
+EXPOSE 8080
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "backend.jar"]

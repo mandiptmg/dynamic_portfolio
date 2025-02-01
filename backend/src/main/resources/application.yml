@@ -66,7 +66,7 @@ file-upload:
     resume: ./uploads/resume/   # Directory for resumes
     contact: ./uploads/contact/ # Directory for contact-related uploads
 
-base-url: http://localhost:8080
+base-url: ${FRONTEND_URL}
 
 # Uncomment and configure if Spring Security is needed
 # security:
