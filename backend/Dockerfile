@@ -4,7 +4,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the build files
-COPY target/backend.jar backend.jar
+COPY . .
 
 # Expose the application port
 EXPOSE 8080

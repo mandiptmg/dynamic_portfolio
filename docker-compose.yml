@@ -3,7 +3,8 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
-    ports: -"5173:5173"
+    ports:
+      - "5173:5173"
     depends_on:
       - backend
     networks:
@@ -11,13 +12,14 @@ services:
 
   backend:
     build: ./backend
-    ports: -"8080:8080"
+    ports:
+      - "8080:8080"
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydatabase
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/portfolio
+      SPRING_DATASOURCE_USERNAME: mandiptamang158
+      SPRING_DATASOURCE_PASSWORD: As1@mandiptamang
     networks:
       - mynetwork
 
@@ -25,8 +27,8 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydatabase
+      MYSQL_ROOT_PASSWORD: As1@mandiptamang
+      MYSQL_DATABASE: portfolio
     ports:
       - "3306:3306"
     volumes:
