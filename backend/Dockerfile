@@ -1,7 +1,6 @@
 # Use the official OpenJDK 21 image
 FROM openjdk:21-jdk-slim
 
-# Set the working directory
 WORKDIR /app
 
 # Copy the build files
